@@ -158,11 +158,12 @@ def submit():
         proceso_mas_largo_espera_reportes = 1 if 'espera_reportes' in proceso_mas_largo_list else 0
         proceso_mas_largo_validacion_datos = 1 if 'validacion_datos' in proceso_mas_largo_list else 0
         
-        desafio_info_desactualizada = 1 if 'desactualizada' in desafio_info_list else 0
-        desafio_info_falta_acceso = 1 if 'falta_acceso' in desafio_info_list else 0
-        desafio_info_datos_dispersos = 1 if 'datos_dispersos' in desafio_info_list else 0
-        desafio_info_falta_reporte = 1 if 'falta_reporte' in desafio_info_list else 0
-        desafio_info_dificil_generar_reporte = 1 if 'dificil_generar_reporte' in desafio_info_list else 0
+        # **CORREGIDO**: Los nombres de las variables coinciden con los de tu script SQL
+        desafio_info_no_actualizada = 1 if 'desactualizada' in desafio_info_list else 0
+        desafio_acceso_dificil = 1 if 'falta_acceso' in desafio_info_list else 0
+        desafio_datos_dispersos = 1 if 'datos_dispersos' in desafio_info_list else 0
+        desafio_falta_reporte = 1 if 'falta_reporte' in desafio_info_list else 0
+        desafio_dificil_generar_reporte = 1 if 'dificil_generar_reporte' in desafio_info_list else 0
 
         infraestructura_dependencia_manual = 1 if 'dependencia_manual' in infraestructura_desafio_list else 0
         infraestructura_falta_estandarizacion = 1 if 'falta_estandarizacion' in infraestructura_desafio_list else 0
@@ -191,13 +192,13 @@ def submit():
         """
         
         # Lista de los valores para la consulta SQL
+        # NOTA: Los nombres de las variables ahora coinciden con los nombres de las columnas en el INSERT
         params = (
             nombre_contacto, cargo, departamento, fecha_entrevista_str,
-            desafio_info_datos_dispersos, desafio_info_falta_acceso,
-            desafio_info_falta_reporte, desafio_info_desactualizada,
-            desafio_info_dificil_generar_reporte, proceso_mas_largo_manual,
-            proceso_mas_largo_multiples_fuentes, proceso_mas_largo_espera_reportes,
-            proceso_mas_largo_validacion_datos,
+            desafio_datos_dispersos, desafio_acceso_dificil, desafio_falta_reporte,
+            desafio_info_no_actualizada, desafio_dificil_generar_reporte,
+            proceso_mas_largo_manual, proceso_mas_largo_multiples_fuentes,
+            proceso_mas_largo_espera_reportes, proceso_mas_largo_validacion_datos,
             infraestructura_dependencia_manual, infraestructura_falta_estandarizacion,
             infraestructura_vulnerabilidades, infraestructura_poca_escalabilidad,
             decision_optimizacion_recursos, decision_reduccion_costos,
@@ -232,4 +233,5 @@ def submit():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
