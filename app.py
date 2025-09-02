@@ -32,7 +32,8 @@ def get_db_connection():
     conn = None
     try:
         logging.info(f"Intentando conectar a: {server}/{database} con usuario: {username}")
-        conn = pyodbc.connect(connection_string, autocommit=True)
+        # Se elimina autocommit=True para forzar el commit manual en el bloque try/except
+        conn = pyodbc.connect(connection_string)
         logging.info("Conexión a la base de datos exitosa.")
         return conn
     except pyodbc.Error as ex:
