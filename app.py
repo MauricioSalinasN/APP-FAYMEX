@@ -34,18 +34,28 @@ if not username or not password or not secret_key:
 
 driver = '{ODBC Driver 17 for SQL Server}' # Asegúrate de que este driver esté instalado en el sistema
 
-# Crea la cadena de conexión
-connection_string = f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password}'
+# Crea la cadena de conexión de forma más explícita
+# Este formato es a menudo más robusto para entornos de nube
+connection_string = 'DRIVER={0};SERVER=tcp:{1},1433;DATABASE={2};UID={3};PWD={4}'.format(driver, server, database, username, password)
+
 
 def get_db_connection():
     """Función para establecer la conexión a la base de datos."""
+    conn = None
     try:
+        logging.info(f"Intentando conectar a: {server}/{database} con usuario: {username}")
         conn = pyodbc.connect(connection_string, autocommit=True)
         logging.info("Conexión a la base de datos exitosa.")
         return conn
     except pyodbc.Error as ex:
         sqlstate = ex.args[0]
-        logging.error(f"Error de base de datos: {sqlstate}")
+        logging.error(f"Error de base de datos: {sqlstate}. Asegúrate de que las credenciales y la IP del servidor sean correctas.")
+        if sqlstate == '28000':
+            logging.error("Error 28000: Las credenciales (usuario/contraseña) son incorrectas.")
+        elif sqlstate == '08001':
+            logging.error("Error 08001: No se puede conectar al servidor. Asegúrate de que tu IP esté permitida en el firewall de Azure SQL.")
+        elif 'Login failed' in str(ex):
+             logging.error("El inicio de sesión ha fallado. Revisa tus credenciales.")
         return None
     except Exception as e:
         logging.error(f"Error inesperado al conectar a la base de datos: {str(e)}")
@@ -200,7 +210,7 @@ def submit():
         logging.info("Parámetros a insertar: %s", params)
 
         # Ejecutar la consulta con los datos del formulario
-        cursor.execute(query, *params)
+        cursor.execute(query, params)
         conn.commit()
         logging.info("Datos insertados con éxito.")
         flash('¡Información guardada con éxito!', 'success')
@@ -222,3 +232,4 @@ def submit():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
