@@ -198,7 +198,7 @@ def submit():
         """
         
         # Lista de los valores para la consulta SQL
-        # NOTA: Los nombres de las variables ahora coinciden con los nombres de las columnas en el INSERT
+        # NOTA: Los nombres de las variables ahora coinciden con los de las columnas en el INSERT
         params = (
             nombre_contacto, cargo, departamento, fecha_entrevista_str,
             desafio_datos_dispersos, desafio_acceso_dificil, desafio_falta_reporte,
@@ -236,5 +236,3 @@ def submit():
         if conn:
             conn.close()
             logging.info("Conexión a la base de datos cerrada.")
-
-

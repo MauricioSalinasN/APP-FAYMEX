@@ -3,290 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Entrevistas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Formulario de Entrevista - Faymex</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f7f7;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 900px;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        .flash {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .flash.success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .flash.error {
+            background-color: #fee2e2;
+            color: #991b1b;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4 sm:p-8 flex flex-col items-center">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-6">
+    <div class="container mx-auto">
+        <div class="card p-6 sm:p-8 md:p-10">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Formulario de Entrevista</h1>
+            <p class="text-center text-gray-500 mb-8">
+                Registra los datos de la entrevista para centralizar la información.
+            </p>
 
-    <div class="max-w-4xl w-full bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
-        <!-- Logo y Título -->
-        <div class="flex flex-col items-center mb-6">
-            <img src="/static/imagen/logo_faymex.png" alt="Logo de Faymex" class="rounded-lg drop-shadow w-64 h-auto">
-            <h1 class="text-3xl font-bold text-center text-slate-800 mt-4 mb-2">Registro de Entrevistas de Negocio</h1>
-        </div>
-        
-        <!-- Sección para mostrar los mensajes de Flash desde Flask -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="p-4 rounded-lg font-semibold shadow-md mb-4
-                    {% if category == 'success' %}bg-green-500 text-white{% else %}bg-red-500 text-white{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
+            <!-- Mensajes Flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
-        <!-- El formulario ahora se envía directamente al servidor -->
-        <form id="interviewForm" action="/submit" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            <!-- Bloque de Información del Contacto -->
-            <div class="col-span-1 md:col-span-2">
-                <h2 class="text-xl font-semibold text-slate-700 mb-4">Datos del Contacto</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form action="{{ url_for('submit') }}" method="post" class="space-y-6">
+                <!-- Información Básica del Contacto -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                        <label for="nombre_contacto" class="block text-slate-700 font-medium mb-1">Nombre del Contacto</label>
-                        <input type="text" id="nombre_contacto" name="nombre_contacto" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200" oninput="this.value = this.value.toUpperCase()">
+                        <label for="nombre_contacto" class="block text-sm font-medium text-gray-700">Nombre del Contacto</label>
+                        <input type="text" id="nombre_contacto" name="nombre_contacto" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
                     <div>
-                        <label for="cargo" class="block text-slate-700 font-medium mb-1">Cargo</label>
-                        <input type="text" id="cargo" name="cargo" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200" oninput="this.value = this.value.toUpperCase()">
+                        <label for="cargo" class="block text-sm font-medium text-gray-700">Cargo</label>
+                        <input type="text" id="cargo" name="cargo"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
+                        <select id="departamento" name="departamento" required
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="" disabled selected>Selecciona un departamento</option>
+                            <option value="Administración">Administración</option>
+                            <option value="Finanzas">Finanzas</option>
+                            <option value="Comercial">Comercial</option>
+                            <option value="Logística">Logística</option>
+                            <option value="RRHH">RRHH</option>
+                            <option value="Sistemas/TI">Sistemas/TI</option>
+                            <option value="Operaciones">Operaciones</option>
+                            <option value="Otro">Otro</option>
+                        </select>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="departamento" class="block text-sm font-medium text-slate-700">Departamento</label>
-                    <select id="departamento" name="departamento" required
-                            class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                        <option value="" disabled selected>Selecciona un departamento</option>
-                        <option value="Inteligencia de Negocios">Inteligencia de Negocios</option>
-                        <option value="Recursos Humanos">Recursos Humanos</option>
-                        <option value="Adq Log-Serv Tec">Adq Log-Serv Tec</option>
-                        <option value="Finanzas">Finanzas</option>
-                        <option value="Bodega">Bodega</option>
-                        <option value="Contabilidad">Contabilidad</option>
-                        <option value="Estudio de Propuestas">Estudio de Propuestas</option>
-                        <option value="Oficina Técnica">Oficina Técnica</option>
-                        <option value="Prev Riesgo-Sist Int">Prev Riesgo-Sist Int</option>
-                        <option value="Talleres">Talleres</option>
-                        <option value="Serv Esp Mec">Serv Esp Mec</option>
-                        <option value="Serv Esp Elec">Serv Esp Elec</option>
-                        <option value="Sistemas">Sistemas</option>
-                        <option value="Otro">Otro</option>
-                    </select>
+                <div class="hidden" id="otro_departamento_field">
+                    <label for="otro_departamento" class="block text-sm font-medium text-gray-700">Nombre del otro departamento</label>
+                    <input type="text" id="otro_departamento" name="otro_departamento"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
+
                 <div>
-                    <label for="fecha_entrevista" class="block text-slate-700 font-medium mb-1">Fecha de Entrevista</label>
-                    <input type="date" id="fecha_entrevista" name="fecha_entrevista" required readonly class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 bg-gray-50 cursor-not-allowed">
+                    <label for="fecha_entrevista" class="block text-sm font-medium text-gray-700">Fecha de la Entrevista</label>
+                    <input type="date" id="fecha_entrevista" name="fecha_entrevista" required
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
-            </div>
 
-            <!-- Campo de texto para el nuevo departamento (oculto por defecto) -->
-            <div id="otro-departamento-container" class="hidden col-span-1 md:col-span-2">
-                <label for="otro_departamento" class="block text-sm font-medium text-slate-700">Nombre del nuevo departamento</label>
-                <input type="text" id="otro_departamento" name="otro_departamento"
-                       class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-            </div>
-
-            <!-- Separador visual -->
-            <div class="col-span-1 md:col-span-2 my-6">
-                <div class="h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
-            </div>
-            
-            <!-- Bloque de Preguntas de la Entrevista -->
-            <div class="col-span-1 md:col-span-2">
-                <h2 class="text-xl font-semibold text-slate-700 mb-4">Preguntas de la Entrevista</h2>
+                <!-- Preguntas de Opciones Múltiples -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Sección de preguntas genéricas (siempre visible) -->
-                    <div id="generic-questions" class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Sección de Desafíos de proceso -->
-                        <div class="p-5 bg-emerald-50 rounded-xl shadow-inner border border-emerald-200">
-                            <p class="text-sm font-bold text-slate-700 mb-4">¿Cuál es el proceso que más tiempo les toma actualmente para obtener la información que necesitan?</p>
-                            <div class="space-y-2">
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo" value="proceso_manual" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
-                                    Proceso manual
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo" value="multiples_fuentes" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
-                                    Múltiples fuentes
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo" value="espera_reportes" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
-                                    Espera de reportes
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo" value="validacion_datos" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
-                                    Validación de datos
-                                </label>
+                    <!-- Preguntas de Información -->
+                    <div class="p-4 border border-gray-200 rounded-md">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Problemas actuales en la gestión de datos:</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input id="datos_dispersos" name="desafio_info" type="checkbox" value="datos_dispersos" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="datos_dispersos" class="ml-2 block text-sm text-gray-700">Datos dispersos en diferentes lugares</label>
                             </div>
-                        </div>
-
-                        <!-- Sección de Calidad de Datos (Actualizada) -->
-                        <div class="p-5 bg-fuchsia-50 rounded-xl shadow-inner border border-fuchsia-200">
-                            <p class="text-sm font-bold text-slate-700 mb-4">¿Qué obstáculos encuentras para acceder o usar la información?</p>
-                            <div class="space-y-2">
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="desactualizada" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Info no Actualizada
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="falta_acceso" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Acceso Dificil
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="datos_dispersos" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Datos Dispersos
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="falta_reporte" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Falta Reportes
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="dificil_generar_reporte" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Dificil Generar Reporte
-                                </label>
+                            <div class="flex items-center">
+                                <input id="falta_acceso" name="desafio_info" type="checkbox" value="falta_acceso" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="falta_acceso" class="ml-2 block text-sm text-gray-700">Falta de acceso a información clave</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="falta_reporte" name="desafio_info" type="checkbox" value="falta_reporte" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="falta_reporte" class="ml-2 block text-sm text-gray-700">Falta de reporte integral</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="desactualizada" name="desafio_info" type="checkbox" value="desactualizada" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="desactualizada" class="ml-2 block text-sm text-gray-700">Información no actualizada</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="dificil_generar_reporte" name="desafio_info" type="checkbox" value="dificil_generar_reporte" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="dificil_generar_reporte" class="ml-2 block text-sm text-gray-700">Difícil generar reportes</label>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Sección de preguntas para Sistemas (oculta por defecto) -->
-                    <div id="sistemas-questions" class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
-                        <!-- Sección de Infraestructura y Seguridad -->
-                        <div class="p-5 bg-sky-50 rounded-xl shadow-inner border border-sky-200">
-                            <p class="text-sm font-bold text-slate-700 mb-4">¿Qué desafíos de infraestructura o seguridad encuentran para el manejo de datos?</p>
-                            <div class="space-y-2">
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_desafio" value="dependencia_manual" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
-                                    Dependencia de procesos manuales
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_desafio" value="falta_estandarizacion" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
-                                    Falta de estandarización
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_desafio" value="vulnerabilidades" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
-                                    Vulnerabilidades de seguridad
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_desafio" value="poca_escalabilidad" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
-                                    Poca escalabilidad
-                                </label>
+                    <!-- Preguntas de Procesos Largos -->
+                    <div class="p-4 border border-gray-200 rounded-md">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Procesos que tardan más tiempo:</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input id="proceso_manual" name="proceso_mas_largo" type="checkbox" value="proceso_manual" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="proceso_manual" class="ml-2 block text-sm text-gray-700">Proceso manual</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="multiples_fuentes" name="proceso_mas_largo" type="checkbox" value="multiples_fuentes" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="multiples_fuentes" class="ml-2 block text-sm text-gray-700">Múltiples fuentes</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="espera_reportes" name="proceso_mas_largo" type="checkbox" value="espera_reportes" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="espera_reportes" class="ml-2 block text-sm text-gray-700">Espera de reportes</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="validacion_datos" name="proceso_mas_largo" type="checkbox" value="validacion_datos" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="validacion_datos" class="ml-2 block text-sm text-gray-700">Validación de datos</label>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Sección de Decisiones (siempre visible) -->
-                    <div class="col-span-1 md:col-span-2 p-5 bg-amber-50 rounded-xl shadow-inner border border-amber-200">
-                        <p class="text-sm font-bold text-slate-700 mb-4">¿Cuál sería el primer gran impacto que le gustaría que lograra en este puesto?</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
-                            <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision" value="optimizacion_recursos" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
-                                Optimización de recursos
-                            </label>
-                            <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision" value="reduccion_costos" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
-                                Reducción de costos
-                            </label>
-                            <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision" value="mejora_planificacion" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
-                                Mejora de planificación
-                            </label>
-                            <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision" value="identificacion_ineficiencias" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
-                                Identificación de ineficiencias
-                            </label>
+                    <!-- Preguntas de Infraestructura -->
+                    <div class="p-4 border border-gray-200 rounded-md">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Retos de Infraestructura (solo para el depto. de Sistemas/TI):</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input id="dependencia_manual" name="infraestructura_desafio" type="checkbox" value="dependencia_manual" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="dependencia_manual" class="ml-2 block text-sm text-gray-700">Dependencia manual de la infraestructura</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="falta_estandarizacion" name="infraestructura_desafio" type="checkbox" value="falta_estandarizacion" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="falta_estandarizacion" class="ml-2 block text-sm text-gray-700">Falta de estandarización</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="vulnerabilidades" name="infraestructura_desafio" type="checkbox" value="vulnerabilidades" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="vulnerabilidades" class="ml-2 block text-sm text-gray-700">Identificación de vulnerabilidades</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="poca_escalabilidad" name="infraestructura_desafio" type="checkbox" value="poca_escalabilidad" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="poca_escalabilidad" class="ml-2 block text-sm text-gray-700">Poca escalabilidad</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preguntas de Decisiones -->
+                    <div class="p-4 border border-gray-200 rounded-md">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Qué ayuda a la toma de decisiones:</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input id="optimizacion_recursos" name="decision" type="checkbox" value="optimizacion_recursos" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="optimizacion_recursos" class="ml-2 block text-sm text-gray-700">Optimización de recursos</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="reduccion_costos" name="decision" type="checkbox" value="reduccion_costos" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="reduccion_costos" class="ml-2 block text-sm text-gray-700">Reducción de costos</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="mejora_planificacion" name="decision" type="checkbox" value="mejora_planificacion" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="mejora_planificacion" class="ml-2 block text-sm text-gray-700">Mejora de la planificación</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="identificacion_ineficiencias" name="decision" type="checkbox" value="identificacion_ineficiencias" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="identificacion_ineficiencias" class="ml-2 block text-sm text-gray-700">Identificación de ineficiencias</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-span-1 md:col-span-2">
-                <label for="comentarios" class="block text-slate-700 font-medium mb-1">Comentarios Adicionales</label>
-                <textarea id="comentarios" name="comentarios" rows="4" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"></textarea>
-            </div>
-            
-            <div class="col-span-1 md:col-span-2 text-center">
-                <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300 shadow-md">
-                    Guardar Entrevista
-                </button>
-            </div>
-        </form>
-        
-        <!-- Sección para mostrar los datos existentes, tal como los carga el backend -->
-        <div id="interviews-table" class="mt-8 pt-6 border-t border-slate-200">
-            <h2 class="text-xl font-semibold text-slate-700 mb-4">Entrevistas Registradas</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-lg overflow-hidden">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">Nombre</th>
-                            <th scope="col" class="px-6 py-3">Cargo</th>
-                            <th scope="col" class="px-6 py-3">Departamento</th>
-                            <th scope="col" class="px-6 py-3">Fecha</th>
-                            <th scope="col" class="px-6 py-3">Comentarios</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for interview in interviews %}
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ interview.nombre_contacto }}</td>
-                            <td class="px-6 py-4">{{ interview.cargo }}</td>
-                            <td class="px-6 py-4">{{ interview.departamento }}</td>
-                            <td class="px-6 py-4">{{ interview.fecha_entrevista }}</td>
-                            <td class="px-6 py-4">{{ interview.comentarios }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                <!-- Comentarios Adicionales -->
+                <div>
+                    <label for="comentarios" class="block text-sm font-medium text-gray-700">Comentarios Adicionales</label>
+                    <textarea id="comentarios" name="comentarios" rows="4"
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                </div>
+
+                <!-- Botón de Envío -->
+                <div class="text-center">
+                    <button type="submit"
+                            class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Guardar Entrevista
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-    
-    <!-- Script para manejar la lógica de la UI, como mostrar/ocultar campos -->
+
     <script>
-        const interviewForm = document.getElementById('interviewForm');
-        const nombreInput = document.getElementById('nombre_contacto');
-        const fechaInput = document.getElementById('fecha_entrevista');
         const departamentoSelect = document.getElementById('departamento');
-        const otroDepartamentoContainer = document.getElementById('otro-departamento-container');
+        const otroDepartamentoField = document.getElementById('otro_departamento_field');
         const otroDepartamentoInput = document.getElementById('otro_departamento');
-        const genericQuestions = document.getElementById('generic-questions');
-        const sistemasQuestions = document.getElementById('sistemas-questions');
-        const resultsContainer = document.getElementById('results-container');
-        const resultsDisplay = document.getElementById('results-display');
-        
-        // Función para obtener la fecha de hoy en formato YYYY-MM-DD
-        function getTodayDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
 
-        // Llenar la fecha automáticamente cuando se empieza a escribir el nombre
-        nombreInput.addEventListener('input', function() {
-            if (!fechaInput.value) {
-                fechaInput.value = getTodayDate();
-            }
-        });
-
-        // Manejar el cambio en la selección del departamento
-        departamentoSelect.addEventListener('change', function() {
-            if (this.value === 'Otro') {
-                otroDepartamentoContainer.classList.remove('hidden');
+        departamentoSelect.addEventListener('change', (event) => {
+            if (event.target.value === 'Otro') {
+                otroDepartamentoField.classList.remove('hidden');
                 otroDepartamentoInput.setAttribute('required', 'required');
             } else {
-                otroDepartamentoContainer.classList.add('hidden');
+                otroDepartamentoField.classList.add('hidden');
                 otroDepartamentoInput.removeAttribute('required');
-            }
-
-            // Lógica para mostrar las preguntas específicas de Sistemas
-            if (this.value === 'Sistemas') {
-                genericQuestions.classList.add('hidden');
-                sistemasQuestions.classList.remove('hidden');
-            } else {
-                genericQuestions.classList.remove('hidden');
-                sistemasQuestions.classList.add('hidden');
+                otroDepartamentoInput.value = '';
             }
         });
     </script>
