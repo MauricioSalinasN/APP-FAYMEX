@@ -109,27 +109,27 @@ def submit():
         infraestructura_desafio_list = request.form.getlist('infraestructura_desafio')
         decision_list = request.form.getlist('decision')
 
-        # Usar True/False para los valores booleanos
-        proceso_mas_largo_manual = 'proceso_manual' in proceso_mas_largo_list
-        proceso_mas_largo_multiples_fuentes = 'multiples_fuentes' in proceso_mas_largo_list
-        proceso_mas_largo_espera_reportes = 'espera_reportes' in proceso_mas_largo_list
-        proceso_mas_largo_validacion_datos = 'validacion_datos' in proceso_mas_largo_list
+        # Usar 1 y 0 para los valores booleanos, según la estructura de la tabla
+        proceso_mas_largo_manual = 1 if 'proceso_manual' in proceso_mas_largo_list else 0
+        proceso_mas_largo_multiples_fuentes = 1 if 'multiples_fuentes' in proceso_mas_largo_list else 0
+        proceso_mas_largo_espera_reportes = 1 if 'espera_reportes' in proceso_mas_largo_list else 0
+        proceso_mas_largo_validacion_datos = 1 if 'validacion_datos' in proceso_mas_largo_list else 0
         
-        desafio_info_no_actualizada = 'desactualizada' in desafio_info_list
-        desafio_acceso_dificil = 'falta_acceso' in desafio_info_list
-        desafio_datos_dispersos = 'datos_dispersos' in desafio_info_list
-        desafio_falta_reporte = 'falta_reporte' in desafio_info_list
-        desafio_dificil_generar_reporte = 'dificil_generar_reporte' in desafio_info_list
+        desafio_info_no_actualizada = 1 if 'desactualizada' in desafio_info_list else 0
+        desafio_acceso_dificil = 1 if 'falta_acceso' in desafio_info_list else 0
+        desafio_datos_dispersos = 1 if 'datos_dispersos' in desafio_info_list else 0
+        desafio_falta_reporte = 1 if 'falta_reporte' in desafio_info_list else 0
+        desafio_dificil_generar_reporte = 1 if 'dificil_generar_reporte' in desafio_info_list else 0
 
-        infraestructura_dependencia_manual = 'dependencia_manual' in infraestructura_desafio_list
-        infraestructura_falta_estandarizacion = 'falta_estandarizacion' in infraestructura_desafio_list
-        infraestructura_vulnerabilidades = 'vulnerabilidades' in infraestructura_desafio_list
-        infraestructura_poca_escalabilidad = 'poca_escalabilidad' in infraestructura_desafio_list
+        infraestructura_dependencia_manual = 1 if 'dependencia_manual' in infraestructura_desafio_list else 0
+        infraestructura_falta_estandarizacion = 1 if 'falta_estandarizacion' in infraestructura_desafio_list else 0
+        infraestructura_vulnerabilidades = 1 if 'vulnerabilidades' in infraestructura_desafio_list else 0
+        infraestructura_poca_escalabilidad = 1 if 'poca_escalabilidad' in infraestructura_desafio_list else 0
 
-        decision_optimizacion_recursos = 'optimizacion_recursos' in decision_list
-        decision_reduccion_costos = 'reduccion_costos' in decision_list
-        decision_mejora_planificacion = 'mejora_planificacion' in decision_list
-        decision_identificacion_ineficiencias = 'identificacion_ineficiencias' in decision_list
+        decision_optimizacion_recursos = 1 if 'optimizacion_recursos' in decision_list else 0
+        decision_reduccion_costos = 1 if 'reduccion_costos' in decision_list else 0
+        decision_mejora_planificacion = 1 if 'mejora_planificacion' in decision_list else 0
+        decision_identificacion_ineficiencias = 1 if 'identificacion_ineficiencias' in decision_list else 0
 
         query = """
             INSERT INTO datos_entrevista (
