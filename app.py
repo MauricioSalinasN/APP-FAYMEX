@@ -231,7 +231,4 @@ def submit():
             conn.close()
             logging.info("Conexión a la base de datos cerrada.")
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
 
