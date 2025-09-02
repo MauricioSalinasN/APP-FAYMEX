@@ -99,6 +99,11 @@ def submit():
     """
     conn = None
     try:
+        logging.info("--- INICIANDO PROCESO DE GUARDADO ---")
+        
+        # DEBUG: Imprimir todos los datos recibidos del formulario
+        logging.info("Datos del formulario recibidos: %s", request.form)
+
         logging.info("Intentando conectar a la base de datos de Azure SQL para guardar datos...")
         conn = get_db_connection()
         if conn is None:
@@ -174,9 +179,9 @@ def submit():
                 comentarios, fecha_registro
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
-
-        # Ejecutar la consulta con los datos del formulario
-        cursor.execute(query, 
+        
+        # Lista de los valores para la consulta SQL
+        params = (
             nombre_contacto, cargo, departamento, fecha_entrevista_str,
             desafio_info_datos_dispersos, desafio_info_falta_acceso,
             desafio_info_falta_reporte, desafio_info_desactualizada,
@@ -189,6 +194,13 @@ def submit():
             decision_mejora_planificacion, decision_identificacion_ineficiencias,
             comentarios, fecha_registro
         )
+
+        # DEBUG: Imprimir la consulta y los parámetros para verificar
+        logging.info("Consulta SQL: %s", query)
+        logging.info("Parámetros a insertar: %s", params)
+
+        # Ejecutar la consulta con los datos del formulario
+        cursor.execute(query, *params)
         conn.commit()
         logging.info("Datos insertados con éxito.")
         flash('¡Información guardada con éxito!', 'success')
