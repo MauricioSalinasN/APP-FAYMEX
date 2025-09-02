@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 
 # --- CONFIGURACIÓN DE TU BASE DE DATOS DE AZURE SQL ---
+# Las variables de entorno son cruciales para la seguridad en producción
 server = os.environ.get('AZURE_SQL_SERVER', 'server-bd-faymex.database.windows.net')
 database = os.environ.get('AZURE_SQL_DATABASE', 'BD_Faymex')
 username = os.environ.get('AZURE_SQL_USERNAME')
@@ -22,6 +23,7 @@ secret_key = os.environ.get('FLASK_SECRET_KEY')
 app.secret_key = secret_key
 
 if not username or not password or not secret_key:
+    # Esto asegura que las credenciales no se queden vacías
     raise ValueError("Error: Las variables de entorno AZURE_SQL_USERNAME, AZURE_SQL_PASSWORD y FLASK_SECRET_KEY deben estar configuradas.")
 
 # Asegúrate de que el driver coincida con la versión que tienes instalada
@@ -54,6 +56,16 @@ def get_db_connection():
         flash("Ocurrió un error inesperado al conectar a la base de datos. Por favor, inténtalo de nuevo más tarde.", 'error')
         return None
 
+def get_form_data_as_booleans(form_list, mapping):
+    """
+    Convierte los datos de las casillas de verificación de una lista de formulario
+    a un diccionario de valores 1 o 0.
+    """
+    return {
+        db_col: 1 if form_name in form_list else 0
+        for form_name, db_col in mapping.items()
+    }
+
 # --- RUTAS DE LA APLICACIÓN ---
 
 @app.route('/')
@@ -80,22 +92,8 @@ def submit():
         logging.info("Conexión exitosa. Recibiendo datos del formulario.")
 
         nombre_contacto = request.form.get('nombre_contacto')
-        cargo = request.form.get('cargo')
-        departamento = request.form.get('departamento')
-        fecha_entrevista_str = request.form.get('fecha_entrevista')
-        comentarios = request.form.get('comentarios')
-        fecha_registro = datetime.now()
-
-        # Convertir la cadena de fecha a un objeto datetime
-        if fecha_entrevista_str:
-            fecha_entrevista = datetime.strptime(fecha_entrevista_str, '%Y-%m-%d').date()
-        else:
-            fecha_entrevista = None
-
-        if departamento == 'Otro':
-            departamento = request.form.get('otro_departamento')
-
-        # --- VALIDACIÓN DE DUPLICADOS ---
+        
+        # Validación de duplicados (ya implementada, ¡excelente!)
         query_check_duplicate = "SELECT COUNT(*) FROM datos_entrevista WHERE LOWER(nombre_contacto) = ?"
         cursor.execute(query_check_duplicate, (nombre_contacto.lower(),))
         
@@ -103,69 +101,80 @@ def submit():
             flash(f'Error: El contacto "{nombre_contacto}" ya existe en la base de datos.', 'error')
             logging.warning(f"Contacto duplicado: '{nombre_contacto}' no se guardó.")
             return redirect(url_for('home'))
-        
+
         # --- CONTINUAR CON LA INSERCIÓN SI NO ES DUPLICADO ---
-        proceso_mas_largo_list = request.form.getlist('proceso_mas_largo')
-        desafio_info_list = request.form.getlist('desafio_info')
-        infraestructura_desafio_list = request.form.getlist('infraestructura_desafio')
-        decision_list = request.form.getlist('decision')
+        cargo = request.form.get('cargo')
+        departamento = request.form.get('departamento')
+        fecha_entrevista_str = request.form.get('fecha_entrevista')
+        comentarios = request.form.get('comentarios')
+        fecha_registro = datetime.now()
 
-        # Usar 1 y 0 para los valores booleanos, según la estructura de la tabla
-        proceso_mas_largo_manual = 1 if 'proceso_manual' in proceso_mas_largo_list else 0
-        proceso_mas_largo_multiples_fuentes = 1 if 'multiples_fuentes' in proceso_mas_largo_list else 0
-        proceso_mas_largo_espera_reportes = 1 if 'espera_reportes' in proceso_mas_largo_list else 0
-        proceso_mas_largo_validacion_datos = 1 if 'validacion_datos' in proceso_mas_largo_list else 0
+        # Convertir la cadena de fecha a un objeto datetime
+        fecha_entrevista = datetime.strptime(fecha_entrevista_str, '%Y-%m-%d').date() if fecha_entrevista_str else None
+        departamento = request.form.get('otro_departamento') if departamento == 'Otro' else departamento
+
+        # Mapeos para las casillas de verificación (refactorizados para mayor claridad)
+        proceso_mas_largo_map = {
+            'proceso_manual': 'proceso_mas_largo_manual',
+            'multiples_fuentes': 'proceso_mas_largo_multiples_fuentes',
+            'espera_reportes': 'proceso_mas_largo_espera_reportes',
+            'validacion_datos': 'proceso_mas_largo_validacion_datos'
+        }
         
-        desafio_info_no_actualizada = 1 if 'desactualizada' in desafio_info_list else 0
-        desafio_acceso_dificil = 1 if 'falta_acceso' in desafio_info_list else 0
-        desafio_datos_dispersos = 1 if 'datos_dispersos' in desafio_info_list else 0
-        desafio_falta_reporte = 1 if 'falta_reporte' in desafio_info_list else 0
-        desafio_dificil_generar_reporte = 1 if 'dificil_generar_reporte' in desafio_info_list else 0
-
-        infraestructura_dependencia_manual = 1 if 'dependencia_manual' in infraestructura_desafio_list else 0
-        infraestructura_falta_estandarizacion = 1 if 'falta_estandarizacion' in infraestructura_desafio_list else 0
-        infraestructura_vulnerabilidades = 1 if 'vulnerabilidades' in infraestructura_desafio_list else 0
-        infraestructura_poca_escalabilidad = 1 if 'poca_escalabilidad' in infraestructura_desafio_list else 0
-
-        decision_optimizacion_recursos = 1 if 'optimizacion_recursos' in decision_list else 0
-        decision_reduccion_costos = 1 if 'reduccion_costos' in decision_list else 0
-        decision_mejora_planificacion = 1 if 'mejora_planificacion' in decision_list else 0
-        decision_identificacion_ineficiencias = 1 if 'identificacion_ineficiencias' in decision_list else 0
-
-        query = """
-            INSERT INTO datos_entrevista (
-                nombre_contacto, cargo, departamento, fecha_entrevista,
-                desafio_datos_dispersos, desafio_acceso_dificil, desafio_falta_reporte,
-                desafio_info_no_actualizada, desafio_dificil_generar_reporte,
-                proceso_mas_largo_manual, proceso_mas_largo_multiples_fuentes,
-                proceso_mas_largo_espera_reportes, proceso_mas_largo_validacion_datos,
-                infraestructura_dependencia_manual, infraestructura_falta_estandarizacion,
-                infraestructura_vulnerabilidades, infraestructura_poca_escalabilidad,
-                decision_optimizacion_recursos, decision_reduccion_costos,
-                decision_mejora_planificacion, decision_identificacion_ineficiencias,
-                comentarios, fecha_registro
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """
+        desafio_info_map = {
+            'desactualizada': 'desafio_info_no_actualizada',
+            'falta_acceso': 'desafio_acceso_dificil',
+            'datos_dispersos': 'desafio_datos_dispersos',
+            'falta_reporte': 'desafio_falta_reporte',
+            'dificil_generar_reporte': 'desafio_dificil_generar_reporte'
+        }
         
-        params = (
-            nombre_contacto, cargo, departamento, fecha_entrevista,
-            desafio_datos_dispersos, desafio_acceso_dificil, desafio_falta_reporte,
-            desafio_info_no_actualizada, desafio_dificil_generar_reporte,
-            proceso_mas_largo_manual, proceso_mas_largo_multiples_fuentes,
-            proceso_mas_largo_espera_reportes, proceso_mas_largo_validacion_datos,
-            infraestructura_dependencia_manual, infraestructura_falta_estandarizacion,
-            infraestructura_vulnerabilidades, infraestructura_poca_escalabilidad,
-            decision_optimizacion_recursos, decision_reduccion_costos,
-            decision_mejora_planificacion, decision_identificacion_ineficiencias,
-            comentarios, fecha_registro
-        )
+        infraestructura_desafio_map = {
+            'dependencia_manual': 'infraestructura_dependencia_manual',
+            'falta_estandarizacion': 'infraestructura_falta_estandarizacion',
+            'vulnerabilidades': 'infraestructura_vulnerabilidades',
+            'poca_escalabilidad': 'infraestructura_poca_escalabilidad'
+        }
+        
+        decision_map = {
+            'optimizacion_recursos': 'decision_optimizacion_recursos',
+            'reduccion_costos': 'decision_reduccion_costos',
+            'mejora_planificacion': 'decision_mejora_planificacion',
+            'identificacion_ineficiencias': 'decision_identificacion_ineficiencias'
+        }
 
+        # Usar la función auxiliar para procesar los datos
+        proceso_mas_largo = get_form_data_as_booleans(request.form.getlist('proceso_mas_largo'), proceso_mas_largo_map)
+        desafio_info = get_form_data_as_booleans(request.form.getlist('desafio_info'), desafio_info_map)
+        infraestructura_desafio = get_form_data_as_booleans(request.form.getlist('infraestructura_desafio'), infraestructura_desafio_map)
+        decision = get_form_data_as_booleans(request.form.getlist('decision'), decision_map)
+        
+        # Combinar todos los datos en un solo diccionario
+        all_data = {
+            'nombre_contacto': nombre_contacto,
+            'cargo': cargo,
+            'departamento': departamento,
+            'fecha_entrevista': fecha_entrevista,
+            **proceso_mas_largo,
+            **desafio_info,
+            **infraestructura_desafio,
+            **decision,
+            'comentarios': comentarios,
+            'fecha_registro': fecha_registro
+        }
+        
+        # Se obtiene el nombre de las columnas y los valores del diccionario de datos para el query
+        columns = ', '.join(all_data.keys())
+        placeholders = ', '.join(['?' for _ in all_data.keys()])
+        params = tuple(all_data.values())
+
+        query = f"INSERT INTO datos_entrevista ({columns}) VALUES ({placeholders})"
+        
         # Registro para depuración
         logging.info(f"Parámetros a insertar: {params}")
 
         cursor.execute(query, params)
         
-        # Muestra el número de filas afectadas
         logging.info(f"Filas afectadas por el comando INSERT: {cursor.rowcount}")
 
         if cursor.rowcount > 0:
@@ -212,7 +221,19 @@ def show_interviews():
         cursor = conn.cursor()
         logging.info("Conexión exitosa. Obteniendo datos.")
         
-        sql_query = "SELECT * FROM datos_entrevista ORDER BY fecha_registro DESC"
+        # Asegurarse de que el orden de las columnas sea el mismo que el del diccionario
+        sql_query = """SELECT 
+            nombre_contacto, cargo, departamento, fecha_entrevista, comentarios, fecha_registro,
+            desafio_datos_dispersos, desafio_acceso_dificil, desafio_falta_reporte,
+            desafio_info_no_actualizada, desafio_dificil_generar_reporte,
+            proceso_mas_largo_manual, proceso_mas_largo_multiples_fuentes,
+            proceso_mas_largo_espera_reportes, proceso_mas_largo_validacion_datos,
+            infraestructura_dependencia_manual, infraestructura_falta_estandarizacion,
+            infraestructura_vulnerabilidades, infraestructura_poca_escalabilidad,
+            decision_optimizacion_recursos, decision_reduccion_costos,
+            decision_mejora_planificacion, decision_identificacion_ineficiencias
+            FROM datos_entrevista ORDER BY fecha_registro DESC"""
+
         cursor.execute(sql_query)
         
         columns = [column[0] for column in cursor.description]
