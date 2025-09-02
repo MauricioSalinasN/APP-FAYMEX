@@ -32,7 +32,6 @@ def get_db_connection():
     conn = None
     try:
         logging.info(f"Intentando conectar a: {server}/{database} con usuario: {username}")
-        # Se elimina autocommit=True para forzar el commit manual en el bloque try/except
         conn = pyodbc.connect(connection_string)
         logging.info("Conexión a la base de datos exitosa.")
         return conn
@@ -154,19 +153,31 @@ def submit():
         )
 
         cursor.execute(query, params)
-        conn.commit()
-        logging.info("Datos insertados con éxito.")
-        flash('¡Información guardada con éxito!', 'success')
+        
+        # NUEVA VERIFICACIÓN: Comprobar si la inserción fue exitosa
+        if cursor.rowcount > 0:
+            conn.commit()
+            logging.info("Datos insertados con éxito.")
+            flash('¡Información guardada con éxito!', 'success')
+        else:
+            conn.rollback()
+            logging.error("La inserción falló silenciosamente. Ninguna fila fue afectada.")
+            flash('Error: La información no pudo ser guardada en la base de datos. Por favor, verifica el esquema de la tabla y los datos.', 'error')
+
         return redirect(url_for('home'))
 
     except pyodbc.Error as ex:
         sqlstate = ex.args[0]
         logging.error(f"Error de base de datos: {sqlstate}")
         flash("Ocurrió un error al guardar la información. Por favor, inténtelo de nuevo.", 'error')
+        if conn:
+            conn.rollback()
         return redirect(url_for('home'))
     except Exception as e:
         logging.error(f"Error inesperado al guardar la información: {str(e)}")
         flash("Ocurrió un error inesperado. Por favor, inténtelo de nuevo.", 'error')
+        if conn:
+            conn.rollback()
         return redirect(url_for('home'))
     finally:
         if conn:
