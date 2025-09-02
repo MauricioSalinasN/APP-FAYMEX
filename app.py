@@ -24,7 +24,7 @@ app.secret_key = secret_key
 if not username or not password or not secret_key:
     raise ValueError("Error: Las variables de entorno AZURE_SQL_USERNAME, AZURE_SQL_PASSWORD y FLASK_SECRET_KEY deben estar configuradas.")
 
-driver = '{ODBC Driver 17 for SQL Server}'
+driver = '{ODBC Driver 18 for SQL Server}'
 connection_string = 'DRIVER={0};SERVER=tcp:{1},1433;DATABASE={2};UID={3};PWD={4}'.format(driver, server, database, username, password)
 
 def get_db_connection():
