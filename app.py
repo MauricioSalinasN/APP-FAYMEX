@@ -66,7 +66,14 @@ def get_db_connection():
 @app.route('/')
 def home():
     """
-    Ruta de inicio que sirve la página de entrevista HTML y muestra los datos existentes.
+    Ruta de inicio que sirve la página de entrevista HTML sin mostrar los datos.
+    """
+    return render_template('datos_entrevista.html')
+
+@app.route('/entrevistas')
+def show_interviews():
+    """
+    Nueva ruta para mostrar la lista de entrevistas.
     """
     conn = None
     interviews = []
@@ -75,7 +82,7 @@ def home():
         conn = get_db_connection()
         if conn is None:
             flash("Error de conexión a la base de datos. Por favor, verifique la configuración.", 'error')
-            return render_template('datos_entrevista.html', interviews=[])
+            return render_template('entrevistas.html', interviews=[])
             
         cursor = conn.cursor()
         logging.info("Conexión exitosa. Obteniendo datos.")
@@ -99,8 +106,7 @@ def home():
             conn.close()
             logging.info("Conexión a la base de datos cerrada.")
 
-    # Asegúrate de que este sea el nombre correcto de tu archivo HTML para la página principal
-    return render_template('datos_entrevista.html', interviews=interviews)
+    return render_template('entrevistas.html', interviews=interviews)
 
 @app.route('/submit', methods=['POST'])
 def submit():
