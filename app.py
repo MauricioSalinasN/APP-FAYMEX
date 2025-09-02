@@ -223,7 +223,7 @@ def show_interviews():
         
         # Asegurarse de que el orden de las columnas sea el mismo que el del diccionario
         sql_query = """SELECT 
-            nombre_contacto, cargo, departamento, fecha_entrevista, comentarios, fecha_registro,
+            id, nombre_contacto, cargo, departamento, fecha_entrevista, comentarios, fecha_registro,
             desafio_datos_dispersos, desafio_acceso_dificil, desafio_falta_reporte,
             desafio_info_no_actualizada, desafio_dificil_generar_reporte,
             proceso_mas_largo_manual, proceso_mas_largo_multiples_fuentes,
@@ -252,3 +252,10 @@ def show_interviews():
             logging.info("Conexión a la base de datos cerrada.")
 
     return render_template('entrevistas.html', interviews=interviews)
+
+# --- INSTRUCCIÓN CRÍTICA: Bloque para ejecutar la aplicación de Flask ---
+# Este bloque es lo que le dice a Python cómo ejecutar tu aplicación.
+if __name__ == '__main__':
+    # El modo 'debug=True' es útil para el desarrollo, ya que reinicia el servidor
+    # automáticamente cada vez que guardas los cambios en el archivo.
+    app.run(debug=True)
