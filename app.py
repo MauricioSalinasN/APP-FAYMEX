@@ -24,6 +24,7 @@ app.secret_key = secret_key
 if not username or not password or not secret_key:
     raise ValueError("Error: Las variables de entorno AZURE_SQL_USERNAME, AZURE_SQL_PASSWORD y FLASK_SECRET_KEY deben estar configuradas.")
 
+# Asegúrate de que el driver coincida con la versión que tienes instalada
 driver = '{ODBC Driver 18 for SQL Server}'
 connection_string = 'DRIVER={0};SERVER=tcp:{1},1433;DATABASE={2};UID={3};PWD={4}'.format(driver, server, database, username, password)
 
@@ -164,9 +165,13 @@ def submit():
 
         cursor.execute(query, params)
         
+        # Muestra el número de filas afectadas
+        logging.info(f"Filas afectadas por el comando INSERT: {cursor.rowcount}")
+
         if cursor.rowcount > 0:
+            logging.info("Intentando hacer commit a la base de datos...")
             conn.commit()
-            logging.info("Datos insertados con éxito.")
+            logging.info("¡Commit exitoso! Datos insertados con éxito.")
             flash('¡Información guardada con éxito!', 'success')
         else:
             conn.rollback()
