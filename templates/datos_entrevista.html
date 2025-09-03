@@ -7,20 +7,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #e2e8f0; /* Un fondo más suave */
+            background-color: #f1f5f9; /* Un gris muy suave y moderno */
         }
         .form-container {
             max-width: 900px;
             margin: auto;
-            background-color: white;
+            background-color: #ffffff;
             padding: 2.5rem;
             border-radius: 1.5rem;
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 5px 15px -5px rgba(0, 0, 0, 0.04);
-            overflow: hidden; /* Para que los bordes redondeados se apliquen bien */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
         }
         .section-block {
             padding: 1.5rem;
@@ -29,20 +30,24 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .section-block-blue {
-            background-color: #dbeafe; /* Azul claro */
+            background-color: #eff6ff;
+            border: 1px solid #dbeafe;
         }
         .section-block-green {
-            background-color: #d1fae5; /* Verde claro */
+            background-color: #f0fdf4;
+            border: 1px solid #dcfce7;
         }
         .section-block-purple {
-            background-color: #e9d5ff; /* Púrpura claro */
+            background-color: #f5f3ff;
+            border: 1px solid #ede9fe;
         }
         .section-block-yellow {
-            background-color: #fef3c7; /* Amarillo claro */
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
         }
         .label-style {
             font-weight: 600;
-            color: #1f2937;
+            color: #334155; /* Un gris oscuro para el texto */
             margin-bottom: 0.5rem;
             display: block;
         }
@@ -50,35 +55,67 @@
             width: 100%;
             padding: 0.75rem;
             border-radius: 0.5rem;
-            border: 1px solid #d1d5db;
-            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc; /* Un fondo ligeramente gris */
             color: #1f2937;
             transition: all 0.2s ease-in-out;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         .input-style:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            background-color: #ffffff;
         }
         .checkbox-container {
             display: flex;
             align-items: center;
-            space-x: 0.5rem;
-            color: #374151;
+            gap: 0.5rem;
+            color: #4b5563;
             font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+        .checkbox-container:hover {
+            background-color: rgba(226, 232, 240, 0.4);
         }
         .checkbox-container input[type="checkbox"] {
-            border-color: #9ca3af;
+            border-color: #94a3b8;
             border-width: 2px;
             width: 1.25rem;
             height: 1.25rem;
             transition: all 0.2s ease-in-out;
             cursor: pointer;
+            appearance: none;
+            position: relative;
         }
-        .checkbox-container input[type="checkbox"]:checked {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+        .checkbox-container input[type="checkbox"]::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.25rem;
+            border: 2px solid #9ca3af;
+            background-color: #ffffff;
+            transition: all 0.2s ease-in-out;
+        }
+        .checkbox-container input[type="checkbox"]:checked::before {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+        .checkbox-container input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: bold;
         }
         .flash-message {
             padding: 1rem;
@@ -87,6 +124,7 @@
             text-align: center;
             font-weight: 600;
             transition: all 0.3s ease-in-out;
+            animation: fadeIn 0.5s ease-out;
         }
         .flash-success {
             background-color: #d1fae5;
@@ -96,13 +134,21 @@
             background-color: #fee2e2;
             color: #991b1b;
         }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
     <div class="form-container">
         <div class="flex flex-col items-center mb-8">
-            <h1 class="text-4xl font-extrabold text-gray-800 mb-2 text-center">Formulario de Entrevista</h1>
-            <p class="text-lg text-gray-500 text-center">Faymex</p>
+            <!-- Icono de FAYMEX -->
+            <svg class="w-16 h-16 mb-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l-2 2h-1l3-3m0 0l3 3h-1l-2-2v13M5 12h14a2 2 0 00-2-2H7a2 2 0 00-2 2zM5 12a2 2 0 012-2h10a2 2 0 012 2v6a2 2 0 01-2 2H7a2 2 0 01-2-2v-6z"></path>
+            </svg>
+            <h1 class="text-4xl font-extrabold text-gray-800 mb-1 text-center">Formulario de Entrevista</h1>
+            <p class="text-xl text-gray-500 text-center">Faymex</p>
         </div>
 
         <!-- Mensajes Flash -->
@@ -117,7 +163,10 @@
         <!-- Formulario de Entrada -->
         <form action="{{ url_for('submit') }}" method="post" class="space-y-8">
             <div class="section-block section-block-blue">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Información del Contacto</h2>
+                <div class="flex items-center gap-3 mb-4">
+                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                    <h2 class="text-2xl font-bold text-gray-800">Información del Contacto</h2>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                         <label for="nombre_contacto" class="label-style">Nombre del Contacto</label>
@@ -162,92 +211,104 @@
 
             <!-- Secciones de Checkbox -->
             <div class="section-block section-block-green">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">¿Cuál es el proceso que más tiempo les toma actualmente?</h3>
+                <div class="flex items-center gap-3 mb-4">
+                    <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2zM13 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2z"></path></svg>
+                    <h3 class="text-xl font-semibold text-gray-800">¿Cuál es el proceso que más tiempo les toma actualmente?</h3>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <label class="checkbox-container">
-                        <input type="checkbox" name="proceso_manual" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="proceso_manual" class="rounded-md">
                         <span>Procesos largos y manuales</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="multiples_fuentes" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="multiples_fuentes" class="rounded-md">
                         <span>Múltiples fuentes de información</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="espera_reportes" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="espera_reportes" class="rounded-md">
                         <span>Esperas para generar reportes</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="validacion_datos" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="validacion_datos" class="rounded-md">
                         <span>Validación de datos</span>
                     </label>
                 </div>
             </div>
 
             <div class="section-block section-block-purple">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Obstáculos para acceder o usar la información</h3>
+                <div class="flex items-center gap-3 mb-4">
+                    <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-2-6a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+                    <h3 class="text-xl font-semibold text-gray-800">Obstáculos para acceder o usar la información</h3>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <label class="checkbox-container">
-                        <input type="checkbox" name="desactualizada" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="desactualizada" class="rounded-md">
                         <span>Información desactualizada</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="falta_acceso" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="falta_acceso" class="rounded-md">
                         <span>Falta de acceso a información clave</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="datos_dispersos" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="datos_dispersos" class="rounded-md">
                         <span>Datos dispersos en la organización</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="falta_reporte" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="falta_reporte" class="rounded-md">
                         <span>Falta de reportes específicos</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="dificil_generar_reporte" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="dificil_generar_reporte" class="rounded-md">
                         <span>Dificultad para generar reportes</span>
                     </label>
                 </div>
             </div>
 
             <div class="section-block section-block-yellow">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Desafíos de infraestructura o seguridad</h3>
+                <div class="flex items-center gap-3 mb-4">
+                    <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zm-6 9a5 5 0 0110 0v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2a5 5 0 015-5z"></path></svg>
+                    <h3 class="text-xl font-semibold text-gray-800">Desafíos de infraestructura o seguridad</h3>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <label class="checkbox-container">
-                        <input type="checkbox" name="dependencia_manual" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="dependencia_manual" class="rounded-md">
                         <span>Dependencia de procesos manuales</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="falta_estandarizacion" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="falta_estandarizacion" class="rounded-md">
                         <span>Falta de estandarización</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="vulnerabilidades" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="vulnerabilidades" class="rounded-md">
                         <span>Vulnerabilidades en seguridad</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="poca_escalabilidad" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="poca_escalabilidad" class="rounded-md">
                         <span>Poca escalabilidad</span>
                     </label>
                 </div>
             </div>
 
             <div class="section-block section-block-blue">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">El primer gran impacto que le gustaría lograr</h3>
+                <div class="flex items-center gap-3 mb-4">
+                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 4a2 2 0 00-2 2v6a2 2 0 002 2h2V4H5z"></path><path d="M11 4a2 2 0 00-2 2v10a2 2 0 002 2h2V4h-2z"></path><path d="M17 8a2 2 0 00-2 2v6a2 2 0 002 2h2V8h-2z"></path></svg>
+                    <h3 class="text-xl font-semibold text-gray-800">El primer gran impacto que le gustaría lograr</h3>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                     <label class="checkbox-container">
-                        <input type="checkbox" name="optimizacion_recursos" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="optimizacion_recursos" class="rounded-md">
                         <span>Optimización de recursos y procesos</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="reduccion_costos" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="reduccion_costos" class="rounded-md">
                         <span>Reducción de costos</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="mejora_planificacion" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="mejora_planificacion" class="rounded-md">
                         <span>Mejora de la planificación</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="identificacion_ineficiencias" class="rounded-md text-blue-600 focus:ring-blue-500">
+                        <input type="checkbox" name="identificacion_ineficiencias" class="rounded-md">
                         <span>Identificación de ineficiencias</span>
                     </label>
                 </div>
@@ -259,7 +320,7 @@
             </div>
 
             <div class="flex justify-center mt-8">
-                <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <button type="submit" class="w-full sm:w-auto px-10 py-4 bg-blue-600 text-white font-bold rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2">
                     Guardar Entrevista
                 </button>
             </div>
