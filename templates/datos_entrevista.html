@@ -210,16 +210,8 @@
     
     <!-- Script para la lógica de la app y la base de datos -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db, auth, userId;
+        // Este script ahora se enfoca en enviar datos a una API de backend,
+        // ya que la conexión directa desde el navegador a una base de datos de Azure no es segura.
 
         const interviewForm = document.getElementById('interviewForm');
         const departamentoSelect = document.getElementById('departamento');
@@ -231,9 +223,13 @@
         const statusMessage = document.getElementById('status-message');
         const userIdDisplay = document.getElementById('user-id');
         
-        // Habilitar logs detallados de Firebase
-        setLogLevel('debug');
-        console.log("Configuración de Firebase:", firebaseConfig);
+        // Simulación de autenticación de usuario
+        let userId = 'simulated-user-id-' + Math.random().toString(36).substr(2, 9);
+        userIdDisplay.textContent = userId;
+
+        // URL de la función de Azure o API de backend
+        // DEBES reemplazar esta URL con la dirección de tu función de Azure real.
+        const AZURE_API_ENDPOINT = 'https://encuesta-faymez-fmhtf3aqdpesguds.chilecentral-01.azurewebsites.net/';
 
         // Función para obtener la fecha de hoy en formato YYYY-MM-DD
         function getTodayDate() {
@@ -263,71 +259,11 @@
             }
         });
 
-        // Configuración e inicialización de Firebase
-        async function setupFirebaseAndAuth() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                
-                console.log("Firebase inicializado. Autenticando...");
-
-                await new Promise((resolve, reject) => {
-                    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-                        unsubscribe();
-                        if (user) {
-                            userId = user.uid;
-                            userIdDisplay.textContent = userId;
-                            console.log("Autenticación exitosa. ID de usuario:", userId);
-                            resolve();
-                        } else {
-                            try {
-                                if (initialAuthToken) {
-                                    console.log("Usando token de autenticación inicial...");
-                                    await signInWithCustomToken(auth, initialAuthToken);
-                                } else {
-                                    console.log("Iniciando sesión anónimamente...");
-                                    await signInAnonymously(auth);
-                                }
-                                userId = auth.currentUser.uid;
-                                userIdDisplay.textContent = userId;
-                                console.log("Autenticación anónima/con token exitosa. ID de usuario:", userId);
-                                resolve();
-                            } catch (error) {
-                                console.error("Error al autenticarse:", error);
-                                statusMessage.textContent = "Error de autenticación. No se puede guardar.";
-                                statusMessage.classList.remove('hidden', 'text-green-600', 'text-blue-600');
-                                statusMessage.classList.add('text-red-600');
-                                userId = "Error de autenticación";
-                                userIdDisplay.textContent = userId;
-                                reject(error);
-                            }
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error("Error al inicializar Firebase:", error);
-                statusMessage.textContent = "Error de conexión con la base de datos.";
-                statusMessage.classList.remove('hidden', 'text-green-600', 'text-blue-600');
-                statusMessage.classList.add('text-red-600');
-                userId = "Error de inicialización";
-                userIdDisplay.textContent = userId;
-            }
-        }
-        
         // Función para manejar el envío del formulario
         async function handleFormSubmit(event) {
             event.preventDefault();
 
-            if (!db || !userId) {
-                console.error("Base de datos no inicializada. Por favor, recarga la página.");
-                statusMessage.textContent = "Error: Base de datos no disponible. Recarga la página.";
-                statusMessage.classList.remove('hidden', 'text-green-600', 'text-blue-600');
-                statusMessage.classList.add('text-red-600');
-                return;
-            }
-
-            statusMessage.textContent = "Guardando datos...";
+            statusMessage.textContent = "Enviando datos a Azure...";
             statusMessage.classList.remove('hidden', 'text-green-600', 'text-red-600');
             statusMessage.classList.add('text-blue-600');
             
@@ -343,7 +279,8 @@
                 infraestructura_desafio: [],
                 decision: [],
                 comentarios: formData.get('comentarios'),
-                timestamp: new Date()
+                timestamp: new Date().toISOString(),
+                userId: userId
             };
 
             // Recopilar los checkboxes seleccionados
@@ -354,26 +291,41 @@
             });
 
             try {
-                // Guardar los datos en Firestore
-                const docRef = await addDoc(collection(db, `artifacts/${appId}/users/${userId}/entrevistas`), data);
-                console.log("Documento guardado con ID:", docRef.id);
-                statusMessage.textContent = "¡Entrevista guardada con éxito!";
-                statusMessage.classList.remove('text-blue-600', 'text-red-600');
-                statusMessage.classList.add('text-green-600');
-                interviewForm.reset();
-                fechaInput.value = getTodayDate();
+                // Enviar los datos a la API de Azure
+                const response = await fetch(AZURE_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log("Respuesta de la API:", result);
+                    statusMessage.textContent = "¡Entrevista guardada con éxito!";
+                    statusMessage.classList.remove('text-blue-600', 'text-red-600');
+                    statusMessage.classList.add('text-green-600');
+                    interviewForm.reset();
+                    fechaInput.value = getTodayDate();
+                } else {
+                    const errorText = await response.text();
+                    console.error("Error en la respuesta de la API:", errorText);
+                    statusMessage.textContent = `Error al guardar: ${response.status} ${response.statusText}`;
+                    statusMessage.classList.remove('text-blue-600', 'text-green-600');
+                    statusMessage.classList.add('text-red-600');
+                }
             } catch (e) {
-                console.error("Error al guardar el documento:", e);
-                statusMessage.textContent = `Error al guardar: ${e.message}`; // Mensaje de error más específico
+                console.error("Error al enviar el documento:", e);
+                statusMessage.textContent = `Error de conexión: ${e.message}`;
                 statusMessage.classList.remove('text-blue-600', 'text-green-600');
                 statusMessage.classList.add('text-red-600');
             }
         }
 
         // Inicialización al cargar la ventana
-        window.onload = async () => {
+        window.onload = () => {
             fechaInput.value = getTodayDate();
-            await setupFirebaseAndAuth();
             interviewForm.addEventListener('submit', handleFormSubmit);
         };
     </script>
