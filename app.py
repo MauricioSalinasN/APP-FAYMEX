@@ -2,6 +2,7 @@
 # Este archivo maneja la lógica del servidor para conectar a la base de datos de Azure SQL.
 
 # Importar las bibliotecas necesarias
+from math import erf
 import pyodbc
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
@@ -231,4 +232,4 @@ def submit():
 
 if __name__ == '__main__':
     app.run(debug=True)
-```eof
+```erf
