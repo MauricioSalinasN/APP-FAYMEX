@@ -94,19 +94,19 @@ def submit():
         # --- PROCESAR LOS CHECKBOXES DE MANERA DINÁMICA ---
         # Se crea un diccionario que mapea los valores del formulario a los nombres de las columnas
         checkbox_mapping = {
-            'proceso_manual': 'proceso_mas_largo_manual',1
-            'multiples_fuentes': 'proceso_mas_largo_multiples_fuentes',1
-            'espera_reportes': 'proceso_mas_largo_espera_reportes',1
-            'validacion_datos': 'proceso_mas_largo_validacion_datos',1
-            'desactualizada': 'desafio_info_no_actualizada',1
-            'falta_acceso': 'desafio_acceso_dificil',1
-            'datos_dispersos': 'desafio_datos_dispersos',1
-            'falta_reporte': 'desafio_falta_reporte',1
-            'dificil_generar_reporte': 'desafio_dificil_generar_reporte',1
-            'dependencia_manual': 'infraestructura_dependencia_manual',1
-            'falta_estandarizacion': 'infraestructura_falta_estandarizacion',1
-            'vulnerabilidades': 'infraestructura_vulnerabilidades',1
-            'poca_escalabilidad': 'infraestructura_poca_escalabilidad',1
+            'proceso_manual': 'proceso_mas_largo_manual',
+            'multiples_fuentes': 'proceso_mas_largo_multiples_fuentes',
+            'espera_reportes': 'proceso_mas_largo_espera_reportes',
+            'validacion_datos': 'proceso_mas_largo_validacion_datos',
+            'desactualizada': 'desafio_info_no_actualizada',
+            'falta_acceso': 'desafio_acceso_dificil',
+            'datos_dispersos': 'desafio_datos_dispersos',
+            'falta_reporte': 'desafio_falta_reporte',
+            'dificil_generar_reporte': 'desafio_dificil_generar_reporte',
+            'dependencia_manual': 'infraestructura_dependencia_manual',
+            'falta_estandarizacion': 'infraestructura_falta_estandarizacion',
+            'vulnerabilidades': 'infraestructura_vulnerabilidades',
+            'poca_escalabilidad': 'infraestructura_poca_escalabilidad',
             'impacto_optimizacion_recursos': 'decision_optimizacion_recursos',
             'impacto_reduccion_costos': 'decision_reduccion_costos',
             'impacto_mejora_planificacion': 'decision_mejora_planificacion',
