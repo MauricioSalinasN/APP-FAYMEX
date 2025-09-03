@@ -110,7 +110,8 @@ def submit():
             'optimizacion_recursos': 'decision_optimizacion_recursos',
             'reduccion_costos': 'decision_reduccion_costos',
             'mejora_planificacion': 'decision_mejora_planificacion',
-            'identificacion_ineficiencias': 'decision_identificacion_ineficiencias'
+            'identificacion_ineficiencias': 'decision_identificacion_ineficiencias',
+            'almacenamiento_disco_duro': 'almacen_disco_duro'
         }
         
         # Inicializa un diccionario para almacenar los valores de las columnas
@@ -144,146 +145,6 @@ def submit():
         
         logging.info("Datos insertados con éxito.")
         flash('¡Información guardada con éxito!', 'success')
-        return redirect(url_for('home'))
-
-    except pyodbc.Error as ex:
-        sqlstate = ex.args[0]
-        logging.error(f"Error de base de datos: {sqlstate}")
-        flash("Ocurrió un error al guardar la información. Por favor, inténtelo de nuevo.", 'error')
-        return redirect(url_for('home'))
-    except Exception as e:
-        logging.error(f"Error inesperado al guardar la información: {str(e)}")
-        flash("Ocurrió un error inesperado. Por favor, inténtelo de nuevo.", 'error')
-        return redirect(url_for('home'))
-    finally:
-        if conn:
-            conn.close()
-            logging.info("Conexión a la base de datos cerrada.")
-
-# --- RUTAS PARA LAS ENTREVISTAS NUEVAS (CORREGIDAS) ---
-
-@app.route('/submit_segunda_entrevista', methods=['POST'])
-def submit_segunda_entrevista():
-    """
-    Ruta para manejar y guardar la segunda parte de la entrevista.
-    """
-    conn = None
-    try:
-        logging.info("--- INICIANDO PROCESO DE GUARDADO PARA LA SEGUNDA ENTREVISTA ---")
-        conn = get_db_connection()
-        if conn is None:
-            flash("Error de conexión a la base de datos.", 'error')
-            return redirect(url_for('home'))
-
-        cursor = conn.cursor()
-
-        nombre_contacto = request.form.get('nombre_contacto')
-        
-        # Validar si el contacto existe antes de actualizar
-        query_check_contact = "SELECT COUNT(*) FROM datos_entrevista WHERE LOWER(nombre_contacto) = ?"
-        cursor.execute(query_check_contact, (nombre_contacto.lower(),))
-        
-        if cursor.fetchone()[0] == 0:
-            flash(f'Error: El contacto "{nombre_contacto}" no existe. Debe registrarlo primero.', 'error')
-            logging.warning(f"Contacto no encontrado: '{nombre_contacto}' no se guardó la segunda entrevista.")
-            return redirect(url_for('home'))
-
-        # Mapeo de los campos del formulario a las nuevas columnas de la base de datos
-        # IMPORTANTE: Asegúrate de que estas columnas existan en tu tabla 'datos_entrevista'.
-        checkbox_mapping = {
-            'satisfaccion_infraestructura_muy_satisfecho': 'satisfaccion_infraestructura_muy_satisfecho',
-            'satisfaccion_infraestructura_satisfecho': 'satisfaccion_infraestructura_satisfecho',
-            'satisfaccion_infraestructura_neutral': 'satisfaccion_infraestructura_neutral',
-            'satisfaccion_infraestructura_insatisfecho': 'satisfaccion_infraestructura_insatisfecho',
-            'satisfaccion_infraestructura_muy_insatisfecho': 'satisfaccion_infraestructura_muy_insatisfecho',
-        }
-        
-        column_values = {col_name: 0 for col_name in checkbox_mapping.values()}
-        
-        for form_key in request.form:
-            if form_key in checkbox_mapping:
-                column_values[checkbox_mapping[form_key]] = 1
-        
-        # Construir la sentencia SQL de forma dinámica
-        columns_to_update = [f"{col} = ?" for col in column_values.keys()]
-        query = f"UPDATE datos_entrevista SET {', '.join(columns_to_update)} WHERE LOWER(nombre_contacto) = ?"
-        
-        params = tuple(column_values.values()) + (nombre_contacto.lower(),)
-
-        cursor.execute(query, params)
-        conn.commit()
-        
-        logging.info("Datos de la segunda entrevista actualizados con éxito.")
-        flash('¡Información de la segunda entrevista guardada con éxito!', 'success')
-        return redirect(url_for('home'))
-
-    except pyodbc.Error as ex:
-        sqlstate = ex.args[0]
-        logging.error(f"Error de base de datos: {sqlstate}")
-        flash("Ocurrió un error al guardar la información. Por favor, inténtelo de nuevo.", 'error')
-        return redirect(url_for('home'))
-    except Exception as e:
-        logging.error(f"Error inesperado al guardar la información: {str(e)}")
-        flash("Ocurrió un error inesperado. Por favor, inténtelo de nuevo.", 'error')
-        return redirect(url_for('home'))
-    finally:
-        if conn:
-            conn.close()
-            logging.info("Conexión a la base de datos cerrada.")
-
-@app.route('/submit_tercera_entrevista', methods=['POST'])
-def submit_tercera_entrevista():
-    """
-    Ruta para manejar y guardar la tercera parte de la entrevista.
-    """
-    conn = None
-    try:
-        logging.info("--- INICIANDO PROCESO DE GUARDADO PARA LA TERCERA ENTREVISTA ---")
-        conn = get_db_connection()
-        if conn is None:
-            flash("Error de conexión a la base de datos.", 'error')
-            return redirect(url_for('home'))
-
-        cursor = conn.cursor()
-
-        nombre_contacto = request.form.get('nombre_contacto')
-        
-        # Validar si el contacto existe antes de actualizar
-        query_check_contact = "SELECT COUNT(*) FROM datos_entrevista WHERE LOWER(nombre_contacto) = ?"
-        cursor.execute(query_check_contact, (nombre_contacto.lower(),))
-        
-        if cursor.fetchone()[0] == 0:
-            flash(f'Error: El contacto "{nombre_contacto}" no existe. Debe registrarlo primero.', 'error')
-            logging.warning(f"Contacto no encontrado: '{nombre_contacto}' no se guardó la tercera entrevista.")
-            return redirect(url_for('home'))
-
-        # Mapeo de los campos del formulario a las nuevas columnas de la base de datos
-        # IMPORTANTE: Asegúrate de que estas columnas existan en tu tabla 'datos_entrevista'.
-        checkbox_mapping = {
-            'comunicacion_equipo_excelente': 'comunicacion_equipo_excelente',
-            'comunicacion_equipo_buena': 'comunicacion_equipo_buena',
-            'comunicacion_equipo_regular': 'comunicacion_equipo_regular',
-            'comunicacion_equipo_mala': 'comunicacion_equipo_mala',
-            'comunicacion_equipo_muy_mala': 'comunicacion_equipo_muy_mala',
-        }
-        
-        column_values = {col_name: 0 for col_name in checkbox_mapping.values()}
-        
-        for form_key in request.form:
-            if form_key in checkbox_mapping:
-                column_values[checkbox_mapping[form_key]] = 1
-        
-        # Construir la sentencia SQL de forma dinámica
-        columns_to_update = [f"{col} = ?" for col in column_values.keys()]
-        query = f"UPDATE datos_entrevista SET {', '.join(columns_to_update)} WHERE LOWER(nombre_contacto) = ?"
-        
-        params = tuple(column_values.values()) + (nombre_contacto.lower(),)
-
-        cursor.execute(query, params)
-        conn.commit()
-        
-        logging.info("Datos de la tercera entrevista actualizados con éxito.")
-        flash('¡Información de la tercera entrevista guardada con éxito!', 'success')
         return redirect(url_for('home'))
 
     except pyodbc.Error as ex:
