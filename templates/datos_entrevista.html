@@ -27,7 +27,7 @@
             padding: 1.5rem;
             border-radius: 1rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1-2px rgba(0, 0, 0, 0.06);
         }
         .section-block-blue {
             background-color: #eff6ff;
@@ -142,14 +142,14 @@
 </head>
 <body class="p-4 sm:p-8">
     <div class="form-container">
-        <!-- Contenedor del encabezado -->
-        <div class="flex flex-col items-center justify-center text-center gap-4 mb-8">
-            <!-- Contenedor del logo en su propia fila -->
-            <div class="w-full mb-2">
-                <img src="https://placehold.co/150x60/dbeafe/1e40af?text=FAYMEX+Logo" alt="Logo de Faymex" class="h-[60px] mx-auto">
+        <!-- Encabezado del formulario con logo y título en filas separadas -->
+        <div class="mb-8">
+            <!-- Logo alineado a la izquierda -->
+            <div class="flex justify-start mb-4">
+                <img src="static/imagen/logo.png" alt="Logo de Faymex" class="h-[60px] flex-shrink-0">
             </div>
-            <!-- Contenedor del título y subtítulo -->
-            <div class="w-full">
+            <!-- Título y subtítulo centrados -->
+            <div class="text-center">
                 <h1 class="text-4xl font-extrabold text-gray-800 mb-1">Formulario de Entrevista</h1>
                 <p class="text-xl text-gray-500">Control y Gestión de la Información</p>
             </div>
@@ -305,6 +305,11 @@
             </div>
         </form>
     </div>
+
+    <!-- Pie de página -->
+    <footer class="mt-10 pt-4 text-center text-sm text-gray-500 border-t border-gray-200">
+        <p>Inteligencia de Negocios FAYMEX</p>
+    </footer>
 
     <script>
         function toggleOtroDepartamento() {
