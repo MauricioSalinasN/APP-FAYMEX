@@ -2,7 +2,6 @@
 # Este archivo maneja la lógica del servidor para conectar a la base de datos de Azure SQL.
 
 # Importar las bibliotecas necesarias
-from math import erf
 import pyodbc
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
@@ -55,7 +54,7 @@ def get_db_connection():
         elif sqlstate == '08001':
             logging.error("Error 08001: No se puede conectar al servidor. Asegúrate de que tu IP esté permitida en el firewall de Azure SQL.")
         elif 'Login failed' in str(ex):
-             logging.error("El inicio de sesión ha fallado. Revisa tus credenciales.")
+            logging.error("El inicio de sesión ha fallado. Revisa tus credenciales.")
         return None
     except Exception as e:
         logging.error(f"Error inesperado al conectar a la base de datos: {str(e)}")
@@ -232,4 +231,3 @@ def submit():
 
 if __name__ == '__main__':
     app.run(debug=True)
-```erf
