@@ -142,12 +142,14 @@
 </head>
 <body class="p-4 sm:p-8">
     <div class="form-container">
-        <!-- Contenedor del encabezado con el logo a la izquierda -->
-        <div class="flex items-center gap-6 mb-8">
-            <!-- Logo de FAYMEX -->
-            <img src="static/imagen/logo_faymex.png" alt="Logo de Faymex" class="h-[60px] flex-shrink-0">
-            <!-- Contenedor para centrar el texto -->
-            <div class="flex-grow text-center">
+        <!-- Contenedor del encabezado -->
+        <div class="flex flex-col items-center justify-center text-center gap-4 mb-8">
+            <!-- Contenedor del logo en su propia fila -->
+            <div class="w-full mb-2">
+                <img src="https://placehold.co/150x60/dbeafe/1e40af?text=FAYMEX+Logo" alt="Logo de Faymex" class="h-[60px] mx-auto">
+            </div>
+            <!-- Contenedor del título y subtítulo -->
+            <div class="w-full">
                 <h1 class="text-4xl font-extrabold text-gray-800 mb-1">Formulario de Entrevista</h1>
                 <p class="text-xl text-gray-500">Control y Gestión de la Información</p>
             </div>
@@ -215,20 +217,20 @@
             <div class="section-block section-block-green">
                 <div class="flex items-center gap-3 mb-4">
                     <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2zM13 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2z"></path></svg>
-                    <h3 class="text-xl font-semibold text-gray-800">¿Cuál es el proceso que más tiempo les toma actualmente?</h3>
+                    <h3 class="text-xl font-semibold text-gray-800">¿Cuál es el proceso que más tiempo les toma actualmente para obtener la información que necesitan?</h3>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <label class="checkbox-container">
                         <input type="checkbox" name="proceso_manual" class="rounded-md">
-                        <span>Procesos largos y manuales</span>
+                        <span>Proceso manual</span>
                     </label>
                     <label class="checkbox-container">
                         <input type="checkbox" name="multiples_fuentes" class="rounded-md">
-                        <span>Múltiples fuentes de información</span>
+                        <span>Múltiples fuentes</span>
                     </label>
                     <label class="checkbox-container">
                         <input type="checkbox" name="espera_reportes" class="rounded-md">
-                        <span>Esperas para generar reportes</span>
+                        <span>Esperas de reportes</span>
                     </label>
                     <label class="checkbox-container">
                         <input type="checkbox" name="validacion_datos" class="rounded-md">
@@ -240,7 +242,7 @@
             <div class="section-block section-block-purple">
                 <div class="flex items-center gap-3 mb-4">
                     <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-2-6a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
-                    <h3 class="text-xl font-semibold text-gray-800">Obstáculos para acceder o usar la información</h3>
+                    <h3 class="text-xl font-semibold text-gray-800">Qué obstáculos encuentras para acceder o usar la información</h3>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <label class="checkbox-container">
@@ -269,32 +271,7 @@
             <div class="section-block section-block-yellow">
                 <div class="flex items-center gap-3 mb-4">
                     <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zm-6 9a5 5 0 0110 0v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2a5 5 0 015-5z"></path></svg>
-                    <h3 class="text-xl font-semibold text-gray-800">Desafíos de infraestructura o seguridad</h3>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <label class="checkbox-container">
-                        <input type="checkbox" name="dependencia_manual" class="rounded-md">
-                        <span>Dependencia de procesos manuales</span>
-                    </label>
-                    <label class="checkbox-container">
-                        <input type="checkbox" name="falta_estandarizacion" class="rounded-md">
-                        <span>Falta de estandarización</span>
-                    </label>
-                    <label class="checkbox-container">
-                        <input type="checkbox" name="vulnerabilidades" class="rounded-md">
-                        <span>Vulnerabilidades en seguridad</span>
-                    </label>
-                    <label class="checkbox-container">
-                        <input type="checkbox" name="poca_escalabilidad" class="rounded-md">
-                        <span>Poca escalabilidad</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="section-block section-block-blue">
-                <div class="flex items-center gap-3 mb-4">
-                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 4a2 2 0 00-2 2v6a2 2 0 002 2h2V4H5z"></path><path d="M11 4a2 2 0 00-2 2v10a2 2 0 002 2h2V4h-2z"></path><path d="M17 8a2 2 0 00-2 2v6a2 2 0 002 2h2V8h-2z"></path></svg>
-                    <h3 class="text-xl font-semibold text-gray-800">El primer gran impacto que le gustaría lograr</h3>
+                    <h3 class="text-xl font-semibold text-gray-800">¿Cuál sería el primer gran impacto que le gustaría que lograra en este puesto?</h3>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                     <label class="checkbox-container">
