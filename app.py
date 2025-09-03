@@ -93,7 +93,6 @@ def submit():
         
         # --- PROCESAR LOS CHECKBOXES DE MANERA DINÁMICA ---
         # Se crea un diccionario que mapea los valores del formulario a los nombres de las columnas
-        # Se agregaron los nuevos nombres de los checkboxes
         checkbox_mapping = {
             'proceso_manual': 'proceso_mas_largo_manual',
             'multiples_fuentes': 'proceso_mas_largo_multiples_fuentes',
@@ -104,22 +103,14 @@ def submit():
             'datos_dispersos': 'desafio_datos_dispersos',
             'falta_reporte': 'desafio_falta_reporte',
             'dificil_generar_reporte': 'desafio_dificil_generar_reporte',
-            'impacto_optimizacion_recursos': 'decision_optimizacion_recursos',
-            'impacto_reduccion_costos': 'decision_reduccion_costos',
-            'impacto_mejora_planificacion': 'decision_mejora_planificacion',
-            'impacto_identificacion_ineficiencias': 'decision_identificacion_ineficiencias',
-            # Nuevos campos de la pregunta "¿Dónde se almacena...?"
-            'almacenamiento_disco_duro': 'almacenamiento_disco_duro',
-            'almacenamiento_nube': 'almacenamiento_nube',
-            'almacenamiento_flexline': 'almacenamiento_flexline',
-            'almacenamiento_servidor_local': 'almacenamiento_servidor_local',
-            'almacenamiento_otros': 'almacenamiento_otros',
-            # Nuevos campos de la pregunta "¿Cómo reportas...?"
-            'reporte_tabla_dinamica': 'reporte_tabla_dinamica',
-            'reporte_dashboard': 'reporte_dashboard',
-            'reporte_hoja_calculo': 'reporte_hoja_calculo',
-            'reporte_email': 'reporte_email',
-            'reporte_otros': 'reporte_otros',
+            'dependencia_manual': 'infraestructura_dependencia_manual',
+            'falta_estandarizacion': 'infraestructura_falta_estandarizacion',
+            'vulnerabilidades': 'infraestructura_vulnerabilidades',
+            'poca_escalabilidad': 'infraestructura_poca_escalabilidad',
+            'optimizacion_recursos': 'decision_optimizacion_recursos',
+            'reduccion_costos': 'decision_reduccion_costos',
+            'mejora_planificacion': 'decision_mejora_planificacion',
+            'identificacion_ineficiencias': 'decision_identificacion_ineficiencias'
         }
         
         # Inicializa un diccionario para almacenar los valores de las columnas
@@ -153,6 +144,157 @@ def submit():
         
         logging.info("Datos insertados con éxito.")
         flash('¡Información guardada con éxito!', 'success')
+        return redirect(url_for('home'))
+
+    except pyodbc.Error as ex:
+        sqlstate = ex.args[0]
+        logging.error(f"Error de base de datos: {sqlstate}")
+        flash("Ocurrió un error al guardar la información. Por favor, inténtelo de nuevo.", 'error')
+        return redirect(url_for('home'))
+    except Exception as e:
+        logging.error(f"Error inesperado al guardar la información: {str(e)}")
+        flash("Ocurrió un error inesperado. Por favor, inténtelo de nuevo.", 'error')
+        return redirect(url_for('home'))
+    finally:
+        if conn:
+            conn.close()
+            logging.info("Conexión a la base de datos cerrada.")
+
+# --- NUEVAS RUTAS AGREGADAS ---
+# Nota: Tendrás que crear las tablas o las columnas correspondientes en tu base de datos si no existen.
+
+@app.route('/submit_segunda_entrevista', methods=['POST'])
+def submit_segunda_entrevista():
+    """
+    Ruta para manejar y guardar un segundo conjunto de datos de entrevista.
+    """
+    conn = None
+    try:
+        logging.info("--- INICIANDO PROCESO DE GUARDADO PARA LA SEGUNDA ENTREVISTA ---")
+        conn = get_db_connection()
+        if conn is None:
+            flash("Error de conexión a la base de datos.", 'error')
+            return redirect(url_for('home'))
+
+        cursor = conn.cursor()
+
+        # Supongamos que tienes un nuevo formulario con estas preguntas:
+        # Pregunta 1: ¿Qué tan satisfecho está con la infraestructura actual?
+        # Pregunta 2: ¿Considera que la comunicación entre equipos es fluida?
+        # Pregunta 3: ¿Cuáles son las principales barreras para la innovación?
+        
+        # Obtener datos del formulario de manera robusta
+        nombre_contacto = request.form.get('nombre_contacto_segunda')
+        satisfaccion_infraestructura = request.form.get('satisfaccion_infraestructura')
+        comunicacion_fluida = request.form.get('comunicacion_fluida')
+        barreras_innovacion = request.form.get('barreras_innovacion')
+        fecha_registro = datetime.now()
+
+        # Validar si el contacto existe antes de intentar guardar
+        query_check_contact = "SELECT COUNT(*) FROM datos_entrevista WHERE LOWER(nombre_contacto) = ?"
+        cursor.execute(query_check_contact, (nombre_contacto.lower(),))
+        
+        if cursor.fetchone()[0] == 0:
+            flash(f'Error: El contacto "{nombre_contacto}" no existe. Debe registrarlo primero.', 'error')
+            logging.warning(f"Contacto no encontrado: '{nombre_contacto}' no se guardó la segunda entrevista.")
+            return redirect(url_for('home'))
+
+        # Sentencia SQL para la actualización de datos existentes con las nuevas preguntas
+        # Asegúrate de que las columnas `satisfaccion_infraestructura`, etc., existan en la tabla `datos_entrevista`
+        query = """
+            UPDATE datos_entrevista SET
+            satisfaccion_infraestructura = ?,
+            comunicacion_fluida = ?,
+            barreras_innovacion = ?
+            WHERE LOWER(nombre_contacto) = ?
+        """
+        
+        params = (
+            satisfaccion_infraestructura,
+            comunicacion_fluida,
+            barreras_innovacion,
+            nombre_contacto.lower()
+        )
+
+        cursor.execute(query, params)
+        conn.commit()
+        
+        logging.info("Datos de la segunda entrevista actualizados con éxito.")
+        flash('¡Información de la segunda entrevista guardada con éxito!', 'success')
+        return redirect(url_for('home'))
+
+    except pyodbc.Error as ex:
+        sqlstate = ex.args[0]
+        logging.error(f"Error de base de datos: {sqlstate}")
+        flash("Ocurrió un error al guardar la información. Por favor, inténtelo de nuevo.", 'error')
+        return redirect(url_for('home'))
+    except Exception as e:
+        logging.error(f"Error inesperado al guardar la información: {str(e)}")
+        flash("Ocurrió un error inesperado. Por favor, inténtelo de nuevo.", 'error')
+        return redirect(url_for('home'))
+    finally:
+        if conn:
+            conn.close()
+            logging.info("Conexión a la base de datos cerrada.")
+
+@app.route('/submit_tercera_entrevista', methods=['POST'])
+def submit_tercera_entrevista():
+    """
+    Ruta para manejar y guardar un tercer conjunto de datos de entrevista.
+    """
+    conn = None
+    try:
+        logging.info("--- INICIANDO PROCESO DE GUARDADO PARA LA TERCERA ENTREVISTA ---")
+        conn = get_db_connection()
+        if conn is None:
+            flash("Error de conexión a la base de datos.", 'error')
+            return redirect(url_for('home'))
+
+        cursor = conn.cursor()
+
+        # Supongamos que tienes un tercer formulario con estas preguntas:
+        # Pregunta 1: ¿Cuál es la visión a 5 años para el departamento?
+        # Pregunta 2: ¿Qué métricas de éxito son clave para su equipo?
+        # Pregunta 3: ¿Hay algún sistema o proceso que desearía automatizar?
+        
+        # Obtener datos del formulario de manera robusta
+        nombre_contacto = request.form.get('nombre_contacto_tercera')
+        vision_futuro = request.form.get('vision_futuro')
+        metricas_clave = request.form.get('metricas_clave')
+        sistema_automatizar = request.form.get('sistema_automatizar')
+        fecha_registro = datetime.now()
+
+        # Validar si el contacto existe antes de intentar guardar
+        query_check_contact = "SELECT COUNT(*) FROM datos_entrevista WHERE LOWER(nombre_contacto) = ?"
+        cursor.execute(query_check_contact, (nombre_contacto.lower(),))
+        
+        if cursor.fetchone()[0] == 0:
+            flash(f'Error: El contacto "{nombre_contacto}" no existe. Debe registrarlo primero.', 'error')
+            logging.warning(f"Contacto no encontrado: '{nombre_contacto}' no se guardó la tercera entrevista.")
+            return redirect(url_for('home'))
+
+        # Sentencia SQL para la actualización de datos existentes con las nuevas preguntas
+        # Asegúrate de que las columnas `vision_futuro`, etc., existan en la tabla `datos_entrevista`
+        query = """
+            UPDATE datos_entrevista SET
+            vision_futuro = ?,
+            metricas_clave = ?,
+            sistema_automatizar = ?
+            WHERE LOWER(nombre_contacto) = ?
+        """
+        
+        params = (
+            vision_futuro,
+            metricas_clave,
+            sistema_automatizar,
+            nombre_contacto.lower()
+        )
+
+        cursor.execute(query, params)
+        conn.commit()
+        
+        logging.info("Datos de la tercera entrevista actualizados con éxito.")
+        flash('¡Información de la tercera entrevista guardada con éxito!', 'success')
         return redirect(url_for('home'))
 
     except pyodbc.Error as ex:
