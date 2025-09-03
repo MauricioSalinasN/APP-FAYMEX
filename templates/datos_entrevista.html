@@ -1,13 +1,84 @@
-out;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Entrevista Faymex</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0; /* Un fondo más suave */
+        }
+        .form-container {
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 5px 15px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden; /* Para que los bordes redondeados se apliquen bien */
+        }
+        .section-block {
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .section-block-blue {
+            background-color: #dbeafe; /* Azul claro */
+        }
+        .section-block-green {
+            background-color: #d1fae5; /* Verde claro */
+        }
+        .section-block-purple {
+            background-color: #e9d5ff; /* Púrpura claro */
+        }
+        .section-block-yellow {
+            background-color: #fef3c7; /* Amarillo claro */
+        }
+        .label-style {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .input-style {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            background-color: #ffffff;
+            color: #1f2937;
+            transition: all 0.2s ease-in-out;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            space-x: 0.5rem;
+            color: #374151;
+            font-weight: 500;
+        }
+        .checkbox-container input[type="checkbox"] {
+            border-color: #9ca3af;
+            border-width: 2px;
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: all 0.2s ease-in-out;
             cursor: pointer;
-            border-radius: 0.375rem;
-            color: #6366f1;
-            background-color: #f9fafb;
         }
         .checkbox-container input[type="checkbox"]:checked {
-            background-color: #6366f1;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
         }
         .flash-message {
             padding: 1rem;
@@ -29,7 +100,7 @@ out;
 </head>
 <body class="p-4 sm:p-8">
     <div class="form-container">
-        <div class="flex flex-col items-center mb-10">
+        <div class="flex flex-col items-center mb-8">
             <h1 class="text-4xl font-extrabold text-gray-800 mb-2 text-center">Formulario de Entrevista</h1>
             <p class="text-lg text-gray-500 text-center">Faymex</p>
         </div>
@@ -45,7 +116,6 @@ out;
 
         <!-- Formulario de Entrada -->
         <form action="{{ url_for('submit') }}" method="post" class="space-y-8">
-            <!-- Sección de Información del Contacto (arriba) -->
             <div class="section-block section-block-blue">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Información del Contacto</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -90,24 +160,24 @@ out;
                 </div>
             </div>
 
-            <!-- Secciones de Preguntas (debajo) -->
+            <!-- Secciones de Checkbox -->
             <div class="section-block section-block-green">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Proceso que más tiempo les toma actualmente</h3>
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">¿Cuál es el proceso que más tiempo les toma actualmente?</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <label class="checkbox-container">
-                        <input type="checkbox" name="proceso_manual" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="proceso_manual" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Procesos largos y manuales</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="multiples_fuentes" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="multiples_fuentes" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Múltiples fuentes de información</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="espera_reportes" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="espera_reportes" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Esperas para generar reportes</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="validacion_datos" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="validacion_datos" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Validación de datos</span>
                     </label>
                 </div>
@@ -117,23 +187,23 @@ out;
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Obstáculos para acceder o usar la información</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <label class="checkbox-container">
-                        <input type="checkbox" name="desactualizada" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="desactualizada" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Información desactualizada</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="falta_acceso" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="falta_acceso" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Falta de acceso a información clave</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="datos_dispersos" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="datos_dispersos" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Datos dispersos en la organización</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="falta_reporte" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="falta_reporte" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Falta de reportes específicos</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="dificil_generar_reporte" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="dificil_generar_reporte" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Dificultad para generar reportes</span>
                     </label>
                 </div>
@@ -143,19 +213,19 @@ out;
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Desafíos de infraestructura o seguridad</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <label class="checkbox-container">
-                        <input type="checkbox" name="dependencia_manual" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="dependencia_manual" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Dependencia de procesos manuales</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="falta_estandarizacion" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="falta_estandarizacion" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Falta de estandarización</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="vulnerabilidades" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="vulnerabilidades" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Vulnerabilidades en seguridad</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="poca_escalabilidad" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="poca_escalabilidad" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Poca escalabilidad</span>
                     </label>
                 </div>
@@ -165,19 +235,19 @@ out;
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">El primer gran impacto que le gustaría lograr</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                     <label class="checkbox-container">
-                        <input type="checkbox" name="optimizacion_recursos" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="optimizacion_recursos" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Optimización de recursos y procesos</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="reduccion_costos" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="reduccion_costos" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Reducción de costos</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="mejora_planificacion" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="mejora_planificacion" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Mejora de la planificación</span>
                     </label>
                     <label class="checkbox-container">
-                        <input type="checkbox" name="identificacion_ineficiencias" class="rounded-md text-indigo-600 focus:ring-indigo-500">
+                        <input type="checkbox" name="identificacion_ineficiencias" class="rounded-md text-blue-600 focus:ring-blue-500">
                         <span>Identificación de ineficiencias</span>
                     </label>
                 </div>
@@ -189,7 +259,7 @@ out;
             </div>
 
             <div class="flex justify-center mt-8">
-                <button type="submit" class="w-full sm:w-auto px-10 py-3 bg-indigo-600 text-white font-bold rounded-full shadow-md hover:bg-indigo-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Guardar Entrevista
                 </button>
             </div>
@@ -200,13 +270,12 @@ out;
         function toggleOtroDepartamento() {
             const selectElement = document.getElementById('departamento');
             const otroContainer = document.getElementById('otro_departamento_container');
-            const otroInput = document.getElementById('otro_departamento');
             if (selectElement.value === 'Otro') {
                 otroContainer.classList.remove('hidden');
-                otroInput.required = true;
+                document.getElementById('otro_departamento').required = true;
             } else {
                 otroContainer.classList.add('hidden');
-                otroInput.required = false;
+                document.getElementById('otro_departamento').required = false;
             }
         }
     </script>
