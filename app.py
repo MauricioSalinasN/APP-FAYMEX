@@ -115,7 +115,12 @@ def submit():
             'almacenamiento_nube': 'almacenamiento_nube',
             'almacenamiento_flexline': 'almacenamiento_flexline',
             'almacenamiento_servidor_local': 'almacenamiento_servidor_local',
-            'almacenamiento_otros': 'almacenamiento_otros'
+            'almacenamiento_otros': 'almacenamiento_otros',
+            'reporte_tabla_dinamica': 'reporte_tabla_dinamica',
+            'reporte_dashboard': 'reporte_dashboard',
+            'reporte_hoja_calculo': 'reporte_hoja_calculo',
+            'reporte_email': 'reporte_email',
+            'reporte_otros': 'reporte_otros'
             
         }
         
