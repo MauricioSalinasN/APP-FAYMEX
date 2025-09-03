@@ -93,6 +93,7 @@ def submit():
         
         # --- PROCESAR LOS CHECKBOXES DE MANERA DINÁMICA ---
         # Se crea un diccionario que mapea los valores del formulario a los nombres de las columnas
+        # Se agregaron los nuevos nombres de los checkboxes
         checkbox_mapping = {
             'proceso_manual': 'proceso_mas_largo_manual',
             'multiples_fuentes': 'proceso_mas_largo_multiples_fuentes',
@@ -103,14 +104,22 @@ def submit():
             'datos_dispersos': 'desafio_datos_dispersos',
             'falta_reporte': 'desafio_falta_reporte',
             'dificil_generar_reporte': 'desafio_dificil_generar_reporte',
-            'dependencia_manual': 'infraestructura_dependencia_manual',
-            'falta_estandarizacion': 'infraestructura_falta_estandarizacion',
-            'vulnerabilidades': 'infraestructura_vulnerabilidades',
-            'poca_escalabilidad': 'infraestructura_poca_escalabilidad',
-            'optimizacion_recursos': 'decision_optimizacion_recursos',
-            'reduccion_costos': 'decision_reduccion_costos',
-            'mejora_planificacion': 'decision_mejora_planificacion',
-            'identificacion_ineficiencias': 'decision_identificacion_ineficiencias'
+            'impacto_optimizacion_recursos': 'decision_optimizacion_recursos',
+            'impacto_reduccion_costos': 'decision_reduccion_costos',
+            'impacto_mejora_planificacion': 'decision_mejora_planificacion',
+            'impacto_identificacion_ineficiencias': 'decision_identificacion_ineficiencias',
+            # Nuevos campos de la pregunta "¿Dónde se almacena...?"
+            'almacenamiento_disco_duro': 'almacenamiento_disco_duro',
+            'almacenamiento_nube': 'almacenamiento_nube',
+            'almacenamiento_flexline': 'almacenamiento_flexline',
+            'almacenamiento_servidor_local': 'almacenamiento_servidor_local',
+            'almacenamiento_otros': 'almacenamiento_otros',
+            # Nuevos campos de la pregunta "¿Cómo reportas...?"
+            'reporte_tabla_dinamica': 'reporte_tabla_dinamica',
+            'reporte_dashboard': 'reporte_dashboard',
+            'reporte_hoja_calculo': 'reporte_hoja_calculo',
+            'reporte_email': 'reporte_email',
+            'reporte_otros': 'reporte_otros',
         }
         
         # Inicializa un diccionario para almacenar los valores de las columnas
