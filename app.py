@@ -110,7 +110,13 @@ def submit():
             'optimizacion_recursos': 'decision_optimizacion_recursos',
             'reduccion_costos': 'decision_reduccion_costos',
             'mejora_planificacion': 'decision_mejora_planificacion',
-            'identificacion_ineficiencias': 'decision_identificacion_ineficiencias'
+            'identificacion_ineficiencias': 'decision_identificacion_ineficiencias',
+            'almacenamiento_disco_duro': 'almacenamiento_disco_duro',
+            'almacenamiento_nube': 'almacenamiento_nube',
+            'almacenamiento_flexline': 'almacenamiento_flexline',
+            'almacenamiento_servidor_local': 'almacenamiento_servidor_local',
+            'almacenamiento_otros': 'almacenamiento_otros'
+            
         }
         
         # Inicializa un diccionario para almacenar los valores de las columnas
