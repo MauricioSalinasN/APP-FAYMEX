@@ -3,340 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Entrevistas Faymex</title>
-    <!-- Incluye el CDN de Tailwind CSS para un estilo rápido y moderno -->
+    <title>Formulario de Entrevista Faymex</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f7f7;
+            background-color: #f3f4f6;
+        }
+        .form-container {
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .label-style {
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .input-style {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            background-color: #f9fafb;
+            color: #1f2937;
+            transition: border-color 0.2s;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        .flash-message {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .flash-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .flash-error {
+            background-color: #fee2e2;
+            color: #991b1b;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4 sm:p-8 flex flex-col items-center">
-    <div class="max-w-4xl w-full bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
-        <!-- Logo y Título -->
-        <div class="flex flex-col items-center mb-6">
-            <img src="https://placehold.co/256x64/E2E8F0/1A202C?text=Logo+de+Faymex" alt="Logo de Faymex" class="rounded-lg drop-shadow w-64 h-auto">
-            <h1 class="text-3xl font-bold text-center text-slate-800 mt-4 mb-2">Registro de Entrevistas de Negocio</h1>
-        </div>
+<body class="p-4 sm:p-8">
+    <div class="form-container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Formulario de Entrevista</h1>
 
-        <!-- ID de Usuario -->
-        <div class="text-center mb-6 text-sm text-slate-500">
-            <p>Tu ID de usuario: <span id="user-id" class="font-mono text-slate-700 font-semibold">Cargando...</span></p>
-        </div>
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
 
-        <!-- El formulario -->
-        <form id="interviewForm" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            <!-- Bloque de Información del Contacto -->
-            <div class="col-span-1 md:col-span-2">
-                <h2 class="text-xl font-semibold text-slate-700 mb-4">Datos del Contacto</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="nombre_contacto" class="block text-slate-700 font-medium mb-1">Nombre del Contacto</label>
-                        <input type="text" id="nombre_contacto" name="nombre_contacto" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200" oninput="this.value = this.value.toUpperCase()">
-                    </div>
-                    <div>
-                        <!-- Se ha corregido la etiqueta del campo 'Cargo' -->
-                        <label for="cargo" class="block text-slate-700 font-medium mb-1">Cargo</label>
-                        <input type="text" id="cargo" name="cargo" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200" oninput="this.value = this.value.toUpperCase()">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Formulario de Entrada -->
+        <form action="{{ url_for('submit') }}" method="post" class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                    <label for="departamento" class="block text-sm font-medium text-slate-700">Departamento</label>
-                    <select id="departamento" name="departamento" required
-                            class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                        <option value="" disabled selected>Selecciona un departamento</option>
-                        <option value="Inteligencia de Negocios">Inteligencia de Negocios</option>
-                        <option value="Recursos Humanos">Recursos Humanos</option>
-                        <option value="Adq Log-Serv Tec">Adq Log-Serv Tec</option>
-                        <option value="Finanzas">Finanzas</option>
-                        <option value="Bodega">Bodega</option>
-                        <option value="Contabilidad">Contabilidad</option>
-                        <option value="Estudio de Propuestas">Estudio de Propuestas</option>
-                        <option value="Oficina Técnica">Oficina Técnica</option>
-                        <option value="Prev Riesgo-Sist Int">Prev Riesgo-Sist Int</option>
-                        <option value="Talleres">Talleres</option>
-                        <option value="Serv Esp Mec">Serv Esp Mec</option>
-                        <option value="Serv Esp Elec">Serv Esp Elec</option>
-                        <option value="Sistemas">Sistemas</option>
-                        <option value="Otro">Otro</option>
-                    </select>
+                    <label for="nombre_contacto" class="label-style">Nombre del Contacto</label>
+                    <input type="text" id="nombre_contacto" name="nombre_contacto" class="input-style" required>
                 </div>
                 <div>
-                    <label for="fecha_entrevista" class="block text-slate-700 font-medium mb-1">Fecha de Entrevista</label>
-                    <input type="date" id="fecha_entrevista" name="fecha_entrevista" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200">
+                    <label for="cargo" class="label-style">Cargo</label>
+                    <input type="text" id="cargo" name="cargo" class="input-style" required>
+                </div>
+                <div>
+                    <label for="departamento" class="label-style">Departamento</label>
+                    <div class="relative">
+                        <select id="departamento" name="departamento" class="input-style" onchange="toggleOtroDepartamento()">
+                            <option value="Ventas">Ventas</option>
+                            <option value="Operaciones">Operaciones</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="otro_departamento_container" class="hidden">
+                    <label for="otro_departamento" class="label-style">Especifica el Departamento</label>
+                    <input type="text" id="otro_departamento" name="otro_departamento" class="input-style">
+                </div>
+                <div>
+                    <label for="fecha_entrevista" class="label-style">Fecha de la Entrevista</label>
+                    <input type="date" id="fecha_entrevista" name="fecha_entrevista" class="input-style" required>
                 </div>
             </div>
 
-            <!-- Campo de texto para el nuevo departamento (oculto por defecto) -->
-            <div id="otro-departamento-container" class="hidden col-span-1 md:col-span-2">
-                <label for="otro_departamento" class="block text-sm font-medium text-slate-700">Nombre del nuevo departamento</label>
-                <input type="text" id="otro_departamento" name="otro_departamento"
-                       class="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" oninput="this.value = this.value.toUpperCase()">
-            </div>
-
-            <!-- Separador visual -->
-            <div class="col-span-1 md:col-span-2 my-6">
-                <div class="h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
-            </div>
-            
-            <!-- Bloque de Preguntas de la Entrevista -->
-            <div class="col-span-1 md:col-span-2">
-                <h2 class="text-xl font-semibold text-slate-700 mb-4">Preguntas de la Entrevista</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Sección de preguntas genéricas (siempre visible) -->
-                    <div id="generic-questions" class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Sección de Desafíos de proceso -->
-                        <div class="p-5 bg-emerald-50 rounded-xl shadow-inner border border-emerald-200">
-                            <p class="text-sm font-bold text-slate-700 mb-4">¿Cuál es el proceso que más tiempo les toma actualmente para obtener la información que necesitan?</p>
-                            <div class="space-y-2">
-                                <!-- Se han actualizado los nombres de los inputs para que coincidan con la base de datos -->
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo_manual" value="true" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
-                                    Proceso manual
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo_multiples_fuentes" value="true" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
-                                    Múltiples fuentes
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo_espera_reportes" value="true" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
-                                    Espera de reportes
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo_validacion_datos" value="true" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
-                                    Validación de datos
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Sección de Calidad de Datos (Actualizada) -->
-                        <div class="p-5 bg-fuchsia-50 rounded-xl shadow-inner border border-fuchsia-200">
-                            <p class="text-sm font-bold text-slate-700 mb-4">¿Qué obstáculos encuentras para acceder o usar la información?</p>
-                            <div class="space-y-2">
-                                <!-- Se han actualizado los nombres de los inputs para que coincidan con la base de datos -->
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info_no_actualizada" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Info no Actualizada
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_acceso_dificil" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Acceso Dificil
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_datos_dispersos" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Datos Dispersos
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_falta_reporte" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Falta Reportes
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_dificil_generar_reporte" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
-                                    Dificil Generar Reporte
-                                </label>
-                            </div>
-                        </div>
+            <!-- Secciones de Checkbox -->
+            <div class="space-y-8 mt-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">¿Qué proceso toma más tiempo?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="proceso_manual" class="rounded-md text-blue-600">
+                            <span>Procesos largos y manuales</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="multiples_fuentes" class="rounded-md text-blue-600">
+                            <span>Múltiples fuentes de información</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="espera_reportes" class="rounded-md text-blue-600">
+                            <span>Esperas para generar reportes</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="validacion_datos" class="rounded-md text-blue-600">
+                            <span>Validación de datos</span>
+                        </label>
                     </div>
+                </div>
 
-                    <!-- Sección de preguntas para Sistemas (oculta por defecto) -->
-                    <div id="sistemas-questions" class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
-                        <!-- Sección de Infraestructura y Seguridad -->
-                        <div class="p-5 bg-sky-50 rounded-xl shadow-inner border border-sky-200">
-                            <p class="text-sm font-bold text-slate-700 mb-4">¿Qué desafíos de infraestructura o seguridad encuentran para el manejo de datos?</p>
-                            <div class="space-y-2">
-                                <!-- Se han actualizado los nombres de los inputs para que coincidan con la base de datos -->
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_dependencia_manual" value="true" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
-                                    Dependencia de procesos manuales
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_falta_estandarizacion" value="true" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
-                                    Falta de estandarización
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_vulnerabilidades" value="true" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
-                                    Vulnerabilidades de seguridad
-                                </label>
-                                <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_poca_escalabilidad" value="true" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
-                                    Poca escalabilidad
-                                </label>
-                            </div>
-                        </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Principales Desafíos con la Información</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="desactualizada" class="rounded-md text-blue-600">
+                            <span>Información desactualizada</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="falta_acceso" class="rounded-md text-blue-600">
+                            <span>Falta de acceso a información clave</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="datos_dispersos" class="rounded-md text-blue-600">
+                            <span>Datos dispersos en la organización</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="falta_reporte" class="rounded-md text-blue-600">
+                            <span>Falta de reportes específicos</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="dificil_generar_reporte" class="rounded-md text-blue-600">
+                            <span>Dificultad para generar reportes</span>
+                        </label>
                     </div>
+                </div>
 
-                    <!-- Sección de Decisiones (siempre visible) -->
-                    <div class="col-span-1 md:col-span-2 p-5 bg-amber-50 rounded-xl shadow-inner border border-amber-200">
-                        <p class="text-sm font-bold text-slate-700 mb-4">¿Cuál sería el primer gran impacto que le gustaría que lograra en este puesto?</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
-                            <!-- Se han actualizado los nombres de los inputs para que coincidan con la base de datos -->
-                            <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision_optimizacion_recursos" value="true" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
-                                Optimización de recursos
-                            </label>
-                            <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision_reduccion_costos" value="true" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
-                                Reducción de costos
-                            </label>
-                            <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision_mejora_planificacion" value="true" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
-                                Mejora de planificación
-                            </label>
-                            <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision_identificacion_ineficiencias" value="true" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
-                                Identificación de ineficiencias
-                            </label>
-                        </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Infraestructura y Herramientas</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="dependencia_manual" class="rounded-md text-blue-600">
+                            <span>Dependencia de procesos manuales</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="falta_estandarizacion" class="rounded-md text-blue-600">
+                            <span>Falta de estandarización</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="vulnerabilidades" class="rounded-md text-blue-600">
+                            <span>Vulnerabilidades en seguridad</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="poca_escalabilidad" class="rounded-md text-blue-600">
+                            <span>Poca escalabilidad</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">¿Cómo se toman las decisiones de negocio?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="optimizacion_recursos" class="rounded-md text-blue-600">
+                            <span>Optimización de recursos y procesos</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="reduccion_costos" class="rounded-md text-blue-600">
+                            <span>Reducción de costos</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="mejora_planificacion" class="rounded-md text-blue-600">
+                            <span>Mejora de la planificación</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-600">
+                            <input type="checkbox" name="identificacion_ineficiencias" class="rounded-md text-blue-600">
+                            <span>Identificación de ineficiencias</span>
+                        </label>
                     </div>
                 </div>
             </div>
 
-            <div class="col-span-1 md:col-span-2">
-                <label for="comentarios" class="block text-slate-700 font-medium mb-1">Comentarios Adicionales</label>
-                <textarea id="comentarios" name="comentarios" rows="4" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"></textarea>
+            <div class="mt-8">
+                <label for="comentarios" class="label-style">Comentarios Adicionales</label>
+                <textarea id="comentarios" name="comentarios" rows="4" class="input-style"></textarea>
             </div>
-            
-            <div class="col-span-1 md:col-span-2 text-center">
-                <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300 shadow-md">
+
+            <div class="flex justify-center mt-8">
+                <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
                     Guardar Entrevista
                 </button>
             </div>
         </form>
-
-        <!-- Mensaje de estado -->
-        <div id="status-message" class="mt-4 text-center text-sm font-medium hidden"></div>
     </div>
-    
-    <!-- Script para la lógica de la app y la base de datos -->
-    <script type="module">
-        // Este script ahora se enfoca en enviar datos a una API de backend,
-        // ya que la conexión directa desde el navegador a una base de datos de Azure no es segura.
 
-        const interviewForm = document.getElementById('interviewForm');
-        const departamentoSelect = document.getElementById('departamento');
-        const otroDepartamentoContainer = document.getElementById('otro-departamento-container');
-        const otroDepartamentoInput = document.getElementById('otro_departamento');
-        const genericQuestions = document.getElementById('generic-questions');
-        const sistemasQuestions = document.getElementById('sistemas-questions');
-        const fechaInput = document.getElementById('fecha_entrevista');
-        const statusMessage = document.getElementById('status-message');
-        const userIdDisplay = document.getElementById('user-id');
-        
-        // Simulación de autenticación de usuario
-        let userId = 'simulated-user-id-' + Math.random().toString(36).substr(2, 9);
-        userIdDisplay.textContent = userId;
-
-        // URL de la función de Azure o API de backend
-        // DEBES reemplazar esta URL con la dirección de tu función de Azure real.
-        const AZURE_API_ENDPOINT = 'https://encuesta-faymez-fmhtf3aqdpesguds.chilecentral-01.azurewebsites.net/';
-
-        // Función para obtener la fecha de hoy en formato YYYY-MM-DD
-        function getTodayDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        
-        // Manejar el cambio en la selección del departamento
-        departamentoSelect.addEventListener('change', function() {
-            if (this.value === 'Otro') {
-                otroDepartamentoContainer.classList.remove('hidden');
-                otroDepartamentoInput.setAttribute('required', 'required');
+    <script>
+        function toggleOtroDepartamento() {
+            const selectElement = document.getElementById('departamento');
+            const otroContainer = document.getElementById('otro_departamento_container');
+            if (selectElement.value === 'Otro') {
+                otroContainer.classList.remove('hidden');
+                document.getElementById('otro_departamento').required = true;
             } else {
-                otroDepartamentoContainer.classList.add('hidden');
-                otroDepartamentoInput.removeAttribute('required');
-            }
-
-            if (this.value === 'Sistemas') {
-                genericQuestions.classList.add('hidden');
-                sistemasQuestions.classList.remove('hidden');
-            } else {
-                genericQuestions.classList.remove('hidden');
-                sistemasQuestions.classList.add('hidden');
-            }
-        });
-
-        // Función para manejar el envío del formulario
-        async function handleFormSubmit(event) {
-            event.preventDefault();
-
-            statusMessage.textContent = "Enviando datos a Azure...";
-            statusMessage.classList.remove('hidden', 'text-green-600', 'text-red-600');
-            statusMessage.classList.add('text-blue-600');
-            
-            const formData = new FormData(interviewForm);
-            
-            // Inicializar el objeto de datos que se enviará, alineado con el esquema de la base de datos
-            const data = {
-                nombre_contacto: formData.get('nombre_contacto'),
-                cargo: formData.get('cargo'),
-                // Asignar el valor de 'Otro' si aplica
-                departamento: formData.get('departamento') === 'Otro' ? formData.get('otro_departamento') : formData.get('departamento'),
-                fecha_entrevista: formData.get('fecha_entrevista'),
-                comentarios: formData.get('comentarios'),
-            };
-
-            // Recopilar los checkboxes seleccionados y convertirlos a booleanos para la base de datos
-            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                // El nombre del input ahora coincide con el nombre de la columna SQL
-                data[checkbox.name] = checkbox.checked;
-            });
-            
-            // Añadir campos adicionales no en el formulario pero requeridos por el backend o la base de datos
-            data.fecha_registro = new Date().toISOString();
-            data.userId = userId;
-
-            try {
-                // Enviar los datos a la API de Azure
-                const response = await fetch(AZURE_API_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log("Respuesta de la API:", result);
-                    statusMessage.textContent = "¡Entrevista guardada con éxito!";
-                    statusMessage.classList.remove('text-blue-600', 'text-red-600');
-                    statusMessage.classList.add('text-green-600');
-                    interviewForm.reset();
-                    // Ocultar campos de 'Otro' y 'Sistemas' después de enviar
-                    otroDepartamentoContainer.classList.add('hidden');
-                    sistemasQuestions.classList.add('hidden');
-                    genericQuestions.classList.remove('hidden');
-                    // Restablecer la fecha a hoy
-                    fechaInput.value = getTodayDate();
-                } else {
-                    const errorText = await response.text();
-                    console.error("Error en la respuesta de la API:", errorText);
-                    statusMessage.textContent = `Error al guardar: ${response.status} ${response.statusText}`;
-                    statusMessage.classList.remove('text-blue-600', 'text-green-600');
-                    statusMessage.classList.add('text-red-600');
-                }
-            } catch (e) {
-                console.error("Error al enviar el documento:", e);
-                statusMessage.textContent = `Error de conexión: ${e.message}`;
-                statusMessage.classList.remove('text-blue-600', 'text-green-600');
-                statusMessage.classList.add('text-red-600');
+                otroContainer.classList.add('hidden');
+                document.getElementById('otro_departamento').required = false;
             }
         }
-
-        // Inicialización al cargar la ventana
-        window.onload = () => {
-            fechaInput.value = getTodayDate();
-            interviewForm.addEventListener('submit', handleFormSubmit);
-        };
     </script>
 </body>
 </html>
