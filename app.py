@@ -14,7 +14,6 @@ logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 
 # --- CONFIGURACIÓN DE TU BASE DE DATOS DE AZURE SQL ---
-# Se usan los valores predeterminados de tu código original para evitar errores de inicio.
 # Las credenciales sensibles se siguen tomando de las variables de entorno.
 server = os.environ.get('AZURE_SQL_SERVER', 'server-bd-faymex.database.windows.net')
 database = os.environ.get('AZURE_SQL_DATABASE', 'BD_Faymex')
@@ -50,31 +49,9 @@ def get_db_connection():
 @app.route('/')
 def home():
     """
-    Ruta de inicio que sirve la página de entrevista HTML y muestra los datos existentes.
+    Ruta de inicio que sirve la página de entrevista HTML, sin mostrar datos existentes.
     """
-    conn = None
-    interviews = []
-    try:
-        conn = get_db_connection()
-        if conn is None:
-            flash("Error de conexión a la base de datos. Por favor, verifique la configuración.", 'error')
-            return render_template('datos_entrevista.html', interviews=[])
-            
-        cursor = conn.cursor()
-        sql_query = "SELECT * FROM datos_entrevista ORDER BY fecha_registro DESC"
-        cursor.execute(sql_query)
-        
-        columns = [column[0] for column in cursor.description]
-        interviews = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    
-    except Exception as e:
-        logging.error(f"Error inesperado al obtener datos: {str(e)}")
-        flash("Ocurrió un error inesperado al cargar los datos.", 'error')
-    finally:
-        if conn:
-            conn.close()
-
-    return render_template('datos_entrevista.html', interviews=interviews)
+    return render_template('datos_entrevista.html')
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -115,7 +92,6 @@ def submit():
             return redirect(url_for('home'))
         
         # --- PROCESAR LOS CHECKBOXES DE MANERA DINÁMICA ---
-        # Este es el cambio principal que corrige el problema de guardado
         # Se crea un diccionario que mapea los valores del formulario a los nombres de las columnas
         checkbox_mapping = {
             'proceso_manual': 'proceso_mas_largo_manual',

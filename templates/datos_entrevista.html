@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Entrevistas Faymex</title>
+    <!-- Incluye el CDN de Tailwind CSS para un estilo rápido y moderno -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -37,7 +38,8 @@
                         <input type="text" id="nombre_contacto" name="nombre_contacto" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200" oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <div>
-                        <label for="cargo" class="block text-slate-700 font-medium mb-1">Cargo88</label>
+                        <!-- Se ha corregido la etiqueta del campo 'Cargo' -->
+                        <label for="cargo" class="block text-slate-700 font-medium mb-1">Cargo</label>
                         <input type="text" id="cargo" name="cargo" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200" oninput="this.value = this.value.toUpperCase()">
                     </div>
                 </div>
@@ -93,20 +95,21 @@
                         <div class="p-5 bg-emerald-50 rounded-xl shadow-inner border border-emerald-200">
                             <p class="text-sm font-bold text-slate-700 mb-4">¿Cuál es el proceso que más tiempo les toma actualmente para obtener la información que necesitan?</p>
                             <div class="space-y-2">
+                                <!-- Se han actualizado los nombres de los inputs para que coincidan con la base de datos -->
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo" value="proceso_manual" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
+                                    <input type="checkbox" name="proceso_mas_largo_manual" value="true" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
                                     Proceso manual
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo" value="multiples_fuentes" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
+                                    <input type="checkbox" name="proceso_mas_largo_multiples_fuentes" value="true" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
                                     Múltiples fuentes
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo" value="espera_reportes" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
+                                    <input type="checkbox" name="proceso_mas_largo_espera_reportes" value="true" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
                                     Espera de reportes
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="proceso_mas_largo" value="validacion_datos" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
+                                    <input type="checkbox" name="proceso_mas_largo_validacion_datos" value="true" class="rounded text-emerald-600 focus:ring-emerald-500 mr-2">
                                     Validación de datos
                                 </label>
                             </div>
@@ -116,24 +119,25 @@
                         <div class="p-5 bg-fuchsia-50 rounded-xl shadow-inner border border-fuchsia-200">
                             <p class="text-sm font-bold text-slate-700 mb-4">¿Qué obstáculos encuentras para acceder o usar la información?</p>
                             <div class="space-y-2">
+                                <!-- Se han actualizado los nombres de los inputs para que coincidan con la base de datos -->
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="desactualizada" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
+                                    <input type="checkbox" name="desafio_info_no_actualizada" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
                                     Info no Actualizada
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="falta_acceso" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
+                                    <input type="checkbox" name="desafio_acceso_dificil" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
                                     Acceso Dificil
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="datos_dispersos" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
+                                    <input type="checkbox" name="desafio_datos_dispersos" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
                                     Datos Dispersos
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="falta_reporte" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
+                                    <input type="checkbox" name="desafio_falta_reporte" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
                                     Falta Reportes
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="desafio_info" value="dificil_generar_reporte" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
+                                    <input type="checkbox" name="desafio_dificil_generar_reporte" value="true" class="rounded text-fuchsia-600 focus:ring-fuchsia-500 mr-2">
                                     Dificil Generar Reporte
                                 </label>
                             </div>
@@ -146,20 +150,21 @@
                         <div class="p-5 bg-sky-50 rounded-xl shadow-inner border border-sky-200">
                             <p class="text-sm font-bold text-slate-700 mb-4">¿Qué desafíos de infraestructura o seguridad encuentran para el manejo de datos?</p>
                             <div class="space-y-2">
+                                <!-- Se han actualizado los nombres de los inputs para que coincidan con la base de datos -->
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_desafio" value="dependencia_manual" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
+                                    <input type="checkbox" name="infraestructura_dependencia_manual" value="true" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
                                     Dependencia de procesos manuales
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_desafio" value="falta_estandarizacion" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
+                                    <input type="checkbox" name="infraestructura_falta_estandarizacion" value="true" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
                                     Falta de estandarización
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_desafio" value="vulnerabilidades" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
+                                    <input type="checkbox" name="infraestructura_vulnerabilidades" value="true" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
                                     Vulnerabilidades de seguridad
                                 </label>
                                 <label class="flex items-center text-slate-700">
-                                    <input type="checkbox" name="infraestructura_desafio" value="poca_escalabilidad" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
+                                    <input type="checkbox" name="infraestructura_poca_escalabilidad" value="true" class="rounded text-sky-600 focus:ring-sky-500 mr-2">
                                     Poca escalabilidad
                                 </label>
                             </div>
@@ -170,20 +175,21 @@
                     <div class="col-span-1 md:col-span-2 p-5 bg-amber-50 rounded-xl shadow-inner border border-amber-200">
                         <p class="text-sm font-bold text-slate-700 mb-4">¿Cuál sería el primer gran impacto que le gustaría que lograra en este puesto?</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+                            <!-- Se han actualizado los nombres de los inputs para que coincidan con la base de datos -->
                             <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision" value="optimizacion_recursos" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
+                                <input type="checkbox" name="decision_optimizacion_recursos" value="true" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
                                 Optimización de recursos
                             </label>
                             <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision" value="reduccion_costos" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
+                                <input type="checkbox" name="decision_reduccion_costos" value="true" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
                                 Reducción de costos
                             </label>
                             <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision" value="mejora_planificacion" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
+                                <input type="checkbox" name="decision_mejora_planificacion" value="true" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
                                 Mejora de planificación
                             </label>
                             <label class="flex items-center text-slate-700">
-                                <input type="checkbox" name="decision" value="identificacion_ineficiencias" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
+                                <input type="checkbox" name="decision_identificacion_ineficiencias" value="true" class="rounded text-amber-600 focus:ring-amber-500 mr-2">
                                 Identificación de ineficiencias
                             </label>
                         </div>
@@ -205,7 +211,6 @@
 
         <!-- Mensaje de estado -->
         <div id="status-message" class="mt-4 text-center text-sm font-medium hidden"></div>
-
     </div>
     
     <!-- Script para la lógica de la app y la base de datos -->
@@ -268,27 +273,26 @@
             statusMessage.classList.add('text-blue-600');
             
             const formData = new FormData(interviewForm);
+            
+            // Inicializar el objeto de datos que se enviará, alineado con el esquema de la base de datos
             const data = {
                 nombre_contacto: formData.get('nombre_contacto'),
                 cargo: formData.get('cargo'),
-                departamento: formData.get('departamento'),
+                // Asignar el valor de 'Otro' si aplica
+                departamento: formData.get('departamento') === 'Otro' ? formData.get('otro_departamento') : formData.get('departamento'),
                 fecha_entrevista: formData.get('fecha_entrevista'),
-                otro_departamento: formData.get('otro_departamento'),
-                proceso_mas_largo: [],
-                desafio_info: [],
-                infraestructura_desafio: [],
-                decision: [],
                 comentarios: formData.get('comentarios'),
-                timestamp: new Date().toISOString(),
-                userId: userId
             };
 
-            // Recopilar los checkboxes seleccionados
-            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-                if (data.hasOwnProperty(checkbox.name)) {
-                    data[checkbox.name].push(checkbox.value);
-                }
+            // Recopilar los checkboxes seleccionados y convertirlos a booleanos para la base de datos
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                // El nombre del input ahora coincide con el nombre de la columna SQL
+                data[checkbox.name] = checkbox.checked;
             });
+            
+            // Añadir campos adicionales no en el formulario pero requeridos por el backend o la base de datos
+            data.fecha_registro = new Date().toISOString();
+            data.userId = userId;
 
             try {
                 // Enviar los datos a la API de Azure
@@ -307,6 +311,11 @@
                     statusMessage.classList.remove('text-blue-600', 'text-red-600');
                     statusMessage.classList.add('text-green-600');
                     interviewForm.reset();
+                    // Ocultar campos de 'Otro' y 'Sistemas' después de enviar
+                    otroDepartamentoContainer.classList.add('hidden');
+                    sistemasQuestions.classList.add('hidden');
+                    genericQuestions.classList.remove('hidden');
+                    // Restablecer la fecha a hoy
                     fechaInput.value = getTodayDate();
                 } else {
                     const errorText = await response.text();
