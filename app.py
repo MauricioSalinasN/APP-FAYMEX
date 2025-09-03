@@ -160,13 +160,12 @@ def submit():
             conn.close()
             logging.info("Conexión a la base de datos cerrada.")
 
-# --- NUEVAS RUTAS AGREGADAS ---
-# Nota: Tendrás que crear las tablas o las columnas correspondientes en tu base de datos si no existen.
+# --- RUTAS PARA LAS ENTREVISTAS NUEVAS (CORREGIDAS) ---
 
 @app.route('/submit_segunda_entrevista', methods=['POST'])
 def submit_segunda_entrevista():
     """
-    Ruta para manejar y guardar un segundo conjunto de datos de entrevista.
+    Ruta para manejar y guardar la segunda parte de la entrevista.
     """
     conn = None
     try:
@@ -178,19 +177,9 @@ def submit_segunda_entrevista():
 
         cursor = conn.cursor()
 
-        # Supongamos que tienes un nuevo formulario con estas preguntas:
-        # Pregunta 1: ¿Qué tan satisfecho está con la infraestructura actual?
-        # Pregunta 2: ¿Considera que la comunicación entre equipos es fluida?
-        # Pregunta 3: ¿Cuáles son las principales barreras para la innovación?
+        nombre_contacto = request.form.get('nombre_contacto')
         
-        # Obtener datos del formulario de manera robusta
-        nombre_contacto = request.form.get('nombre_contacto_segunda')
-        satisfaccion_infraestructura = request.form.get('satisfaccion_infraestructura')
-        comunicacion_fluida = request.form.get('comunicacion_fluida')
-        barreras_innovacion = request.form.get('barreras_innovacion')
-        fecha_registro = datetime.now()
-
-        # Validar si el contacto existe antes de intentar guardar
+        # Validar si el contacto existe antes de actualizar
         query_check_contact = "SELECT COUNT(*) FROM datos_entrevista WHERE LOWER(nombre_contacto) = ?"
         cursor.execute(query_check_contact, (nombre_contacto.lower(),))
         
@@ -199,22 +188,27 @@ def submit_segunda_entrevista():
             logging.warning(f"Contacto no encontrado: '{nombre_contacto}' no se guardó la segunda entrevista.")
             return redirect(url_for('home'))
 
-        # Sentencia SQL para la actualización de datos existentes con las nuevas preguntas
-        # Asegúrate de que las columnas `satisfaccion_infraestructura`, etc., existan en la tabla `datos_entrevista`
-        query = """
-            UPDATE datos_entrevista SET
-            satisfaccion_infraestructura = ?,
-            comunicacion_fluida = ?,
-            barreras_innovacion = ?
-            WHERE LOWER(nombre_contacto) = ?
-        """
+        # Mapeo de los campos del formulario a las nuevas columnas de la base de datos
+        # IMPORTANTE: Asegúrate de que estas columnas existan en tu tabla 'datos_entrevista'.
+        checkbox_mapping = {
+            'satisfaccion_infraestructura_muy_satisfecho': 'satisfaccion_infraestructura_muy_satisfecho',
+            'satisfaccion_infraestructura_satisfecho': 'satisfaccion_infraestructura_satisfecho',
+            'satisfaccion_infraestructura_neutral': 'satisfaccion_infraestructura_neutral',
+            'satisfaccion_infraestructura_insatisfecho': 'satisfaccion_infraestructura_insatisfecho',
+            'satisfaccion_infraestructura_muy_insatisfecho': 'satisfaccion_infraestructura_muy_insatisfecho',
+        }
         
-        params = (
-            satisfaccion_infraestructura,
-            comunicacion_fluida,
-            barreras_innovacion,
-            nombre_contacto.lower()
-        )
+        column_values = {col_name: 0 for col_name in checkbox_mapping.values()}
+        
+        for form_key in request.form:
+            if form_key in checkbox_mapping:
+                column_values[checkbox_mapping[form_key]] = 1
+        
+        # Construir la sentencia SQL de forma dinámica
+        columns_to_update = [f"{col} = ?" for col in column_values.keys()]
+        query = f"UPDATE datos_entrevista SET {', '.join(columns_to_update)} WHERE LOWER(nombre_contacto) = ?"
+        
+        params = tuple(column_values.values()) + (nombre_contacto.lower(),)
 
         cursor.execute(query, params)
         conn.commit()
@@ -240,7 +234,7 @@ def submit_segunda_entrevista():
 @app.route('/submit_tercera_entrevista', methods=['POST'])
 def submit_tercera_entrevista():
     """
-    Ruta para manejar y guardar un tercer conjunto de datos de entrevista.
+    Ruta para manejar y guardar la tercera parte de la entrevista.
     """
     conn = None
     try:
@@ -252,19 +246,9 @@ def submit_tercera_entrevista():
 
         cursor = conn.cursor()
 
-        # Supongamos que tienes un tercer formulario con estas preguntas:
-        # Pregunta 1: ¿Cuál es la visión a 5 años para el departamento?
-        # Pregunta 2: ¿Qué métricas de éxito son clave para su equipo?
-        # Pregunta 3: ¿Hay algún sistema o proceso que desearía automatizar?
+        nombre_contacto = request.form.get('nombre_contacto')
         
-        # Obtener datos del formulario de manera robusta
-        nombre_contacto = request.form.get('nombre_contacto_tercera')
-        vision_futuro = request.form.get('vision_futuro')
-        metricas_clave = request.form.get('metricas_clave')
-        sistema_automatizar = request.form.get('sistema_automatizar')
-        fecha_registro = datetime.now()
-
-        # Validar si el contacto existe antes de intentar guardar
+        # Validar si el contacto existe antes de actualizar
         query_check_contact = "SELECT COUNT(*) FROM datos_entrevista WHERE LOWER(nombre_contacto) = ?"
         cursor.execute(query_check_contact, (nombre_contacto.lower(),))
         
@@ -273,22 +257,27 @@ def submit_tercera_entrevista():
             logging.warning(f"Contacto no encontrado: '{nombre_contacto}' no se guardó la tercera entrevista.")
             return redirect(url_for('home'))
 
-        # Sentencia SQL para la actualización de datos existentes con las nuevas preguntas
-        # Asegúrate de que las columnas `vision_futuro`, etc., existan en la tabla `datos_entrevista`
-        query = """
-            UPDATE datos_entrevista SET
-            vision_futuro = ?,
-            metricas_clave = ?,
-            sistema_automatizar = ?
-            WHERE LOWER(nombre_contacto) = ?
-        """
+        # Mapeo de los campos del formulario a las nuevas columnas de la base de datos
+        # IMPORTANTE: Asegúrate de que estas columnas existan en tu tabla 'datos_entrevista'.
+        checkbox_mapping = {
+            'comunicacion_equipo_excelente': 'comunicacion_equipo_excelente',
+            'comunicacion_equipo_buena': 'comunicacion_equipo_buena',
+            'comunicacion_equipo_regular': 'comunicacion_equipo_regular',
+            'comunicacion_equipo_mala': 'comunicacion_equipo_mala',
+            'comunicacion_equipo_muy_mala': 'comunicacion_equipo_muy_mala',
+        }
         
-        params = (
-            vision_futuro,
-            metricas_clave,
-            sistema_automatizar,
-            nombre_contacto.lower()
-        )
+        column_values = {col_name: 0 for col_name in checkbox_mapping.values()}
+        
+        for form_key in request.form:
+            if form_key in checkbox_mapping:
+                column_values[checkbox_mapping[form_key]] = 1
+        
+        # Construir la sentencia SQL de forma dinámica
+        columns_to_update = [f"{col} = ?" for col in column_values.keys()]
+        query = f"UPDATE datos_entrevista SET {', '.join(columns_to_update)} WHERE LOWER(nombre_contacto) = ?"
+        
+        params = tuple(column_values.values()) + (nombre_contacto.lower(),)
 
         cursor.execute(query, params)
         conn.commit()
