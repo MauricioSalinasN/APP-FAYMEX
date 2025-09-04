@@ -354,15 +354,39 @@
                 </div>
             </div>
 
-            <div class="section-block section-block-yellow">
-                <div class="flex items-center gap-3 mb-4">
-                    <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zm-6 9a5 5 0 0110 0v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2a5 5 0 015-5z"></path></svg>
-                    <h3 class="text-xl font-semibold text-gray-800">¿Cuál es la tarea más repetitiva o "manual" que consume más tiempo en su día o semana?</h3>
-                </div>
-                 <div>
-                        <label for="cargo" class="label-style">Cargo</label>
-                        <input type="text" id="cargo" name="cargo" class="input-style" required>
-                    </div>
+            <!-- Bloque de sección para la nueva pregunta sobre tareas repetitivas -->
+<div class="section-block section-block-yellow">
+    <div class="flex items-center gap-3 mb-4">
+        <!-- Icono de persona y texto para el encabezado de la pregunta -->
+        <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zm-6 9a5 5 0 0110 0v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2a5 5 0 015-5z"></path>
+        </svg>
+        <h3 class="text-xl font-semibold text-gray-800">¿Cuál es la tarea más repetitiva o "manual" que consume más tiempo en su día o semana?</h3>
+    </div>
+    <!-- Usamos un textarea para permitir una respuesta más larga y detallada -->
+    <div class="mt-4">
+        <label for="tarea_repetitiva" class="label-style">Describa la tarea:</label>
+        <!-- El textarea es ideal para respuestas de texto largo -->
+        <textarea id="tarea_repetitiva" name="tarea_repetitiva" rows="4" class="input-style" placeholder="Ejemplo: 'Consolidar datos de Excel, luego pasarlos a un informe de Power Point.'"></textarea>
+    </div>
+</div>
+
+<!-- Bloque de sección para la nueva pregunta sobre dato que no tienen -->
+<div class="section-block section-block-yellow">
+    <div class="flex items-center gap-3 mb-4">
+        <!-- Icono de persona y texto para el encabezado de la pregunta -->
+        <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zm-6 9a5 5 0 0110 0v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2a5 5 0 015-5z"></path>
+        </svg>
+        <h3 class="text-xl font-semibold text-gray-800">Cuando necesitan un dato que no tienen, ¿cuál es el proceso para conseguirlo? ¿A quién se lo solicitan?</h3>
+    </div>
+    <!-- Usamos un textarea para permitir una respuesta más larga y detallada -->
+    <div class="mt-4">
+        <label for="Consigo_Datos" class="label-style">Consigo Datos:</label>
+        <!-- El textarea es ideal para respuestas de texto largo -->
+        <textarea id="Consigo_Datos" name="Consigo_Datos" rows="4" class="input-style" placeholder="Ejemplo: 'Se solicita a Juan ..'"></textarea>
+    </div>
+</div>
 
             <div class="mt-8">
                 <label for="comentarios" class="label-style">Comentarios Adicionales</label>
