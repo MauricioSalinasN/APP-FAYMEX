@@ -76,10 +76,11 @@ def submit():
         departamento = request.form.get('departamento')
         fecha_entrevista_str = request.form.get('fecha_entrevista')
         comentarios = request.form.get('comentarios')
-        Tarea_Repetitiva = request.form.get('Tarea_Repetitiva')
-        Conseguir_Dato = request.form.get('Conseguir_Dato')
-        Responsable_actualiza = request.form.get('Responsable_actualiza')
+        tarea_repetitiva = request.form.get('tarea_repetitiva')
+        conseguir_dato = request.form.get('conseguir_dato')
+        responsable_actualiza = request.form.get('responsable_actualiza')
         fecha_registro = datetime.now()
+             
 
         # Manejar la opción "Otro" para el departamento
         if departamento == 'Otro':
@@ -138,7 +139,7 @@ def submit():
         # Sentencia SQL para la inserción de datos
         columns = [
             'nombre_contacto', 'cargo', 'departamento', 'fecha_entrevista',
-            'comentarios', 'fecha_registro', 'Tarea_Repetitiva', 'Conseguir_Dato', 'Responsable_actualiza'
+            'comentarios', 'fecha_registro', 'tarea_repetitiva', 'conseguir_dato', 'responsable_actualiza'
         ] + list(column_values.keys())
         
         placeholders = ', '.join(['?'] * len(columns))
@@ -149,7 +150,7 @@ def submit():
         # Lista de los valores para la consulta SQL
         params = (
             nombre_contacto, cargo, departamento, fecha_entrevista_str,
-            comentarios, fecha_registro,Tarea_Repetitiva, Conseguir_Dato, Responsable_actualiza
+            comentarios, fecha_registro,tarea_repetitiva, conseguir_dato, responsable_actualiza
         ) + tuple(column_values.values())
 
         # Ejecutar la consulta con los datos del formulario
