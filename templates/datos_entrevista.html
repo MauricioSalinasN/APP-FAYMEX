@@ -173,9 +173,9 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                        <label for="nombre_contacto" class="label-style">Nombre del Contacto</label>
-                        <input type="text" id="nombre_contacto" name="nombre_contacto" class="input-style" required>
-                    </div>
+    <label for="nombre_contacto" class="label-style">Nombre del Contacto</label>
+    <input type="text" id="nombre_contacto" name="nombre_contacto" class="input-style" required oninput="this.value = this.value.toUpperCase()">
+</div>
                     <div>
                         <label for="cargo" class="label-style">Cargo</label>
                         <input type="text" id="cargo" name="cargo" class="input-style" required>
